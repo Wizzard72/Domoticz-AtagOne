@@ -27,7 +27,7 @@ class BasePlugin:
     MESSAGE_INFO_STATUS = 16
     MESSAGE_INFO_WIFISCAN = 32
     MESSAGE_INFO_EXTRA = 64
-    HTTP_CLIENT_PORT = 10000
+    HTTP_CLIENT_PORT = '10000'
     #HostIP = None
     #HostMac = None
     #HostName = None
