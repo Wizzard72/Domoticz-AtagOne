@@ -103,7 +103,7 @@ class BasePlugin:
 
     def onHeartbeat(self):
         self.countDown = self.countDown + 1
-        if self.countDown == 3
+        if self.countDown == 3:
             self.atagConn = Domoticz.Connection(Name=self.Address, Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
             self.atagConn.Connect()
         Domoticz.Log("onHeartbeat called")
