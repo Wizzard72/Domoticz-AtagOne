@@ -85,7 +85,7 @@ class BasePlugin:
             Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp)+' targetTemp='+str(targetTemp)+' boilerStatus='+str(boilerStatus))
             UpdateDevice(1, targetTemp, str(targetTemp))
             UpdateDevice(2, roomTemp, str(roomTemp))
-        else
+        else:
             Domoticz.Error('Atag One returned status='+Data['Status'])
         self.atagConn.Disconnect()
         self.atagConn = None
