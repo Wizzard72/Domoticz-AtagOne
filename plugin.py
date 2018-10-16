@@ -94,7 +94,6 @@ class BasePlugin:
         else:
             Domoticz.Error('Atag One returned status='+Data['Status'])
         self.atagConn.Disconnect()
-        self.atagConn = None
         self.countDown = newCountDown
         Domoticz.Log("onMessage called")
 
