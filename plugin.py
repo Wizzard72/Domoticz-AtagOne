@@ -32,7 +32,7 @@ class BasePlugin:
     #HostMac = None
     #HostName = None
     atagConn = None
-    countDown = 3
+    countDown = 6
     
     def __init__(self):
         #self.var = 123
@@ -76,18 +76,18 @@ class BasePlugin:
 
     def onMessage(self, Connection, Data):
         Status = int(Data["Status"])
-        newCountDown = 0
+        newCountDown = 3
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
             Domoticz.Log('Atag One respons: '+strData)
             atagResponse = json.loads(strData)['retrieve_reply']
             if (int(atagResponse['acc_status']) == 2):
-                roomTemp = float(atagResponse['report']['room_temp'])
-                targetTemp = float(atagResponse['control']['ch_mode_temp'])
+                roomTemp = atagResponse['report']['room_temp']
+                targetTemp = atagResponse['control']['ch_mode_temp']
                 boilerStatus = int(atagResponse['report']['boiler_status'])
                 Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp)+' targetTemp='+str(targetTemp)+' boilerStatus='+str(boilerStatus))
-                UpdateDevice(1, targetTemp, str(targetTemp))
-                UpdateDevice(2, roomTemp, str(roomTemp))
+                UpdateDevice(1, int(targetTemp), str(targetTemp))
+                UpdateDevice(2, int(roomTemp), str(roomTemp))
             else:
                 Domoticz.Log('Atag One /retrieve failed')
                 newCountDown = 2 # retry on next Heartbeat
@@ -108,7 +108,7 @@ class BasePlugin:
 
     def onHeartbeat(self):
         self.countDown = self.countDown + 1
-        if self.countDown == 3:
+        if self.countDown == 6:
             self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
             self.atagConn.Connect()
         Domoticz.Log("onHeartbeat called")
