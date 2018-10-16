@@ -44,7 +44,7 @@ class BasePlugin:
         
         if (len(Devices) == 0):
             Domoticz.Device(Name="TargetTemp",  Unit=1, Type=242,  Subtype=1).Create()
-            Domoticz.Device(Name="RoomTemp",  Unit=2, Type=242,  Subtype=2).Create()
+            Domoticz.Device(Name="RoomTemp", Unit=2, TypeName='Temperature').Create()
             
         self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
         self.atagConn.Connect()
