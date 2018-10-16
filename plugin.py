@@ -46,7 +46,7 @@ class BasePlugin:
             Domoticz.Device(Name="TargetTemp",  Unit=1, Type=242,  Subtype=1).Create()
             Domoticz.Device(Name="RoomTemp",  Unit=2, Type=242,  Subtype=2).Create()
             
-        self.atagConn = Domoticz.Connection(Name=self.Address, Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
+        self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
         self.atagConn.Connect()
         Domoticz.Log("onStart called")
 
