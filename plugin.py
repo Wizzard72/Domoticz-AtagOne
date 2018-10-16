@@ -76,21 +76,27 @@ class BasePlugin:
 
     def onMessage(self, Connection, Data):
         Status = int(Data["Status"])
-        newCountDown = 3
+        newCountDown = 0
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
             Domoticz.Log('Atag One respons: '+strData)
             atagResponse = json.loads(strData)['retrieve_reply']
-            if (int(atagResponse['acc_status']) == 2):
-                roomTemp = atagResponse['report']['room_temp']
-                targetTemp = atagResponse['control']['ch_mode_temp']
-                boilerStatus = int(atagResponse['report']['boiler_status'])
-                Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp)+' targetTemp='+str(targetTemp)+' boilerStatus='+str(boilerStatus))
-                UpdateDevice(1, int(targetTemp), str(targetTemp))
-                UpdateDevice(2, int(roomTemp), str(roomTemp))
+            if (int(atagResponse['acc_status']) == 2) and ('report' in atagResponse) and ('control' in atagResponse):
+                report = atagResponse['report']
+                control = atagResponse['control']
+                if ('room_temp' in report) and ('boiler_status' in report) and ('ch_mode_temp' in control):
+                    roomTemp = report['room_temp']
+                    targetTemp = control['ch_mode_temp']
+                    boilerStatus = int(report['boiler_status'])
+                    Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp)+' targetTemp='+str(targetTemp)+' boilerStatus='+str(boilerStatus))
+                    UpdateDevice(1, int(targetTemp), str(targetTemp))
+                    UpdateDevice(2, int(roomTemp), str(roomTemp))
+                else:
+                    Domoticz.Log('Atag One /retrieve failed')
+                    newCountDown = 3 # retry on next Heartbeat
             else:
                 Domoticz.Log('Atag One /retrieve failed')
-                newCountDown = 2 # retry on next Heartbeat
+                newCountDown = 3 # retry on next Heartbeat
         else:
             Domoticz.Error('Atag One returned status='+Data['Status'])
         self.atagConn.Disconnect()
@@ -111,7 +117,6 @@ class BasePlugin:
         if self.countDown == 6:
             self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
             self.atagConn.Connect()
-        Domoticz.Log("onHeartbeat called")
 
       
 '''        
