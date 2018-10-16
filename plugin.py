@@ -79,7 +79,7 @@ class BasePlugin:
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
             Domoticz.Log('Atag One respons: '+strData)
-            atagResponse = json.load(strData)['retrieve_reply']
+            atagResponse = json.loads(strData)['retrieve_reply']
             roomTemp = float(atagResponse['report']['room_temp'])
             targetTemp = float(atagResponse['control']['ch_mode_temp'])
             boilerStatus = int(atagResponse['report']['boiler_status'])
