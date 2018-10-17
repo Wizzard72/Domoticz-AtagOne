@@ -54,6 +54,9 @@ class BasePlugin:
             
         if (self.FLAME_OFF_IMG not in Images):
             Domoticz.Image('flame-off-icons.zip').Create()
+
+        Domoticz.Log('flame ON image='+str(Images[self.FLAME_ON_IMG].ID))
+        Domoticz.Log('flame OFF image='+str(Images[self.FLAME_OFF_IMG].ID))
             
         if (self.TARGET_TEMP_UNIT not in Devices):
             Domoticz.Device(Name="TargetTemp",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1, Image=Images[self.FLAME_OFF_IMG].ID).Create()
@@ -175,8 +178,10 @@ class BasePlugin:
                 boilerStatus = int(report['boiler_status'])
                 Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp)+' targetTemp='+str(targetTemp)+' boilerStatus='+str(boilerStatus))
                 if ((boilerStatus & 8) == 8):
+                    Domoticz.Log('Updating with flame ON')
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_ON_IMG].ID)
                 else:
+                    Domoticz.Log('Updating with flame OFF')
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_OFF_IMG].ID)
                 UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
             else:
@@ -308,9 +313,10 @@ def UpdateDevice(Unit, nValue, sValue, Image=None):
         if (Devices[Unit].nValue != nValue) or (Devices[Unit].sValue != sValue) or ((Image != None) and (Image != Devices[Unit].Image)):
             if (Image != None) and (Image != Devices[Unit].Image):
                 Devices[Unit].Update(nValue=nValue, sValue=str(sValue), Image=Image)
+                Domoticz.Log("Update "+str(nValue)+":'"+str(sValue)+"' ("+Devices[Unit].Name+") Image="+str(image))
             else:
                 Devices[Unit].Update(nValue=nValue, sValue=str(sValue))
-            Domoticz.Log("Update "+str(nValue)+":'"+str(sValue)+"' ("+Devices[Unit].Name+")")
+                Domoticz.Log("Update "+str(nValue)+":'"+str(sValue)+"' ("+Devices[Unit].Name+")")
 
     # Generic helper functions
 def DumpConfigToLog():
