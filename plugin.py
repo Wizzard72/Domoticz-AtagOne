@@ -315,7 +315,7 @@ def UpdateDevice(Unit, nValue, sValue, Image=None):
         if (Devices[Unit].nValue != nValue) or (Devices[Unit].sValue != sValue) or ((Image != None) and (Image != Devices[Unit].Image)):
             if (Image != None) and (Image != Devices[Unit].Image):
                 Devices[Unit].Update(nValue=nValue, sValue=str(sValue), Image=Image)
-                Domoticz.Log("Update "+str(nValue)+":'"+str(sValue)+"' ("+Devices[Unit].Name+") Image="+str(image))
+                Domoticz.Log("Update "+str(nValue)+":'"+str(sValue)+"' ("+Devices[Unit].Name+") Image="+str(Image))
             else:
                 Devices[Unit].Update(nValue=nValue, sValue=str(sValue))
                 Domoticz.Log("Update "+str(nValue)+":'"+str(sValue)+"' ("+Devices[Unit].Name+")")
