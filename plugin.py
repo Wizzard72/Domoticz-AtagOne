@@ -13,6 +13,12 @@
     <params>
         <param field="Address" label="IP Address of Atag One" width="200px" required="true" default="127.0.0.1"/>
         <param field="Mode1" label="Domoticz MAC" width="600px" required="true" default="1A-2B-3C-4D-5E-6F"/>
+        <param field="Mode2" label="Debug" width="75px">
+            <options>
+                <option label="True" value="Debug"/>
+                <option label="False" value="Normal"  default="True" />
+            </options>
+        </param>
     </params>
 </plugin>
 """
@@ -48,6 +54,11 @@ class BasePlugin:
         return
 
     def onStart(self):
+        if Parameters["Mode2"] == 'Debug':
+            Domoticz.Debugging(1)
+            DumpConfigToLog()
+        else:
+            Domoticz.Debugging(0)
         self.hostMac = str(Parameters['Mode1'])
         if (self.FLAME_ON_IMG not in Images):
             Domoticz.Log('Loading flame ON images')
@@ -60,8 +71,8 @@ class BasePlugin:
         for image in Images:
             Domoticz.Debug("Icon " + str(Images[image].ID) + " " + Images[image].Name)
             
-        Domoticz.Log('flame ON image='+str(Images[self.FLAME_ON_IMG].ID))
-        Domoticz.Log('flame OFF image='+str(Images[self.FLAME_OFF_IMG].ID))
+        Domoticz.Debug('flame ON image='+str(Images[self.FLAME_ON_IMG].ID))
+        Domoticz.Debug('flame OFF image='+str(Images[self.FLAME_OFF_IMG].ID))
             
         if (self.TARGET_TEMP_UNIT not in Devices):
             Domoticz.Device(Name="TargetTemp",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1, Image=Images[self.FLAME_OFF_IMG].ID).Create()
@@ -73,7 +84,6 @@ class BasePlugin:
             
         self.SetupConnection()
         Domoticz.Heartbeat(10)
-        DumpConfigToLog()
 
     def onStop(self):
         Domoticz.Log("onStop called")
@@ -99,7 +109,7 @@ class BasePlugin:
         Status = int(Data["Status"])
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
-            Domoticz.Log('Atag One response: '+strData)
+            Domoticz.Debug('Atag One response: '+strData)
             atagResponse = json.loads(strData)
             if ('retrieve_reply' in atagResponse):
                 self.countDown = self.ProcessDetails(atagResponse['retrieve_reply'])
