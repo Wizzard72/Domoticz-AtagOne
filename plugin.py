@@ -171,6 +171,8 @@ class BasePlugin:
                 self.hostAuth = False
                 newCountDown = 1
             else:
+                if (('acc_status' in response) and (int(response['acc_status']) == 0)):
+                    newCountDown = 12 # wait longer before retrying
                 Domoticz.Log('Atag One missing retrieve response')
         return newCountDown
         
