@@ -132,13 +132,13 @@ class BasePlugin:
         Domoticz.Log("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
         if (int(Unit) == self.TARGET_TEMP_UNIT) and (int(Unit) in Devices) and (str(Command) == 'Set Level'):
             if (self.atagConn == None) or (not self.atagConn.Connected()):
-                Domoticz.Log('Requesting AtagOne details')
-                self.UpdateTargetTemp(Level)
-            else:
                 self.setLevel = True
                 self.newLevel = Level
                 Domoticz.Debug('Attempting to reconnect AtagOne')
                 self.SetupConnection()
+            else:
+                Domoticz.Log('Requesting AtagOne details')
+                self.UpdateTargetTemp(Level)
 
     def onNotification(self, Name, Subject, Text, Status, Priority, Sound, ImageFile):
         Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
