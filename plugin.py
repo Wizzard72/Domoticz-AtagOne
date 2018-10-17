@@ -33,6 +33,8 @@ class BasePlugin:
     ROOM_TEMP_UNIT = 2
     TEMPERATURE_MIN = 4.0
     TEMPERATURE_MAX = 27.0
+    FLAME_ON_IMG = 'atag-one-flame-on'
+    FLAME_OFF_IMG = 'atag-one-flame-off'
     hostMac = '1a-2b-3c-4d-5e-6f' # 'unique' MAC
     hostName = 'Domoticz atag-one API'
     hostAuth = True
@@ -47,11 +49,17 @@ class BasePlugin:
 
     def onStart(self):
         self.hostMac = str(Parameters['Mode1'])
-        if not (self.TARGET_TEMP_UNIT in Devices):
-            Domoticz.Device(Name="TargetTemp",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1).Create()
+        if (self.FLAME_ON_IMG not in Images):
+            Domoticz.Image('flame-on-icons.zip').Create()
+            
+        if (self.FLAME_OFF_IMG not in Images):
+            Domoticz.Image('flame-off-icons.zip').Create()
+            
+        if (self.TARGET_TEMP_UNIT not in Devices):
+            Domoticz.Device(Name="TargetTemp",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1, Image=Images[self.FLAME_OFF_IMG].ID).Create()
             UpdateDevice(self.TARGET_TEMP_UNIT, 0, "0.0")
             
-        if not (self.ROOM_TEMP_UNIT in Devices):
+        if (self.ROOM_TEMP_UNIT not in Devices):
             Domoticz.Device(Name="RoomTemp", Unit=self.ROOM_TEMP_UNIT, TypeName='Temperature').Create()
             UpdateDevice(self.ROOM_TEMP_UNIT, 0, "0.0")
             
@@ -164,7 +172,10 @@ class BasePlugin:
                 targetTemp = control['ch_mode_temp']
                 boilerStatus = int(report['boiler_status'])
                 Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp)+' targetTemp='+str(targetTemp)+' boilerStatus='+str(boilerStatus))
-                UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp))
+                if ((boilerStatus & 8) == 8):
+                    UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_ON_IMG].ID)
+                else:
+                    UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_OFF_IMG].ID)
                 UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
             else:
                 Domoticz.Log('Atag One invalid retrieve response')
@@ -284,13 +295,15 @@ def onHeartbeat():
     global _plugin
     _plugin.onHeartbeat()
 
-def UpdateDevice(Unit, nValue, sValue):
+def UpdateDevice(Unit, nValue, sValue, Image=None):
     # Make sure that the Domoticz device still exists (they can be deleted) before updating it 
     if (Unit in Devices):
-        if (Devices[Unit].nValue != nValue) or (Devices[Unit].sValue != sValue):
-            Devices[Unit].Update(nValue=nValue, sValue=str(sValue))
+        if (Devices[Unit].nValue != nValue) or (Devices[Unit].sValue != sValue) or ((Image != None) and (Image != Devices[Unit].Image)):
+            if (Image != None) and (Image != Devices[Unit].Image):
+                Devices[Unit].Update(nValue=nValue, sValue=str(sValue), Image=Image)
+            else:
+                Devices[Unit].Update(nValue=nValue, sValue=str(sValue))
             Domoticz.Log("Update "+str(nValue)+":'"+str(sValue)+"' ("+Devices[Unit].Name+")")
-    return
 
     # Generic helper functions
 def DumpConfigToLog():
