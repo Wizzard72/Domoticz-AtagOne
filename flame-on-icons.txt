@@ -1,1 +1,1 @@
-AtagOneFlame;AtagOneFlame;AtagOne Local Flame ON Icons
+AtagOneLocalFlame;AtagOneLocalFlame;AtagOne Local Flame ON Icons

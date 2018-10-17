@@ -1,1 +1,1 @@
-AtagOneNoFlame;AtagOneNoFlame;AtagOne Local Flame OFF icons
+AtagOneLocalNoFlame;AtagOneLocalNoFlame;AtagOne Local Flame OFF icons
