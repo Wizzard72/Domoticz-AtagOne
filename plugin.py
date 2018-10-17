@@ -58,12 +58,12 @@ class BasePlugin:
 
     def onConnect(self, Connection, Status, Description):
         if (Status == 0):
-            Domoticz.Debug("Atag One connected successfully.")
+            Domoticz.Log("Atag One connected successfully.")
             if self.hostAuth:
-                Domoticz.Debug("Requesting AtagOne details.")
+                Domoticz.Log("Requesting AtagOne details.")
                 self.RequestDetails()
             else:
-                Domoticz.Debug("Requesting AtagOne authorization.")
+                Domoticz.Log("Requesting AtagOne authorization.")
                 self.Authenticate()
         else:
             Domoticz.Log("Failed to connect ("+str(Status)+") to: "+Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT)+" with error: "+Description)
@@ -108,7 +108,7 @@ class BasePlugin:
                     Domoticz.Log('Requesting AtagOne details')
                     self.RequestDetails()
                 else:
-                    Domoticz.Debug("Requesting AtagOne authorization.")
+                    Domoticz.Log("Requesting AtagOne authorization.")
                     self.Authenticate()
 
     def SetupConnection(self):
@@ -116,7 +116,7 @@ class BasePlugin:
         self.atagConn.Connect()
 
     def RequestDetails(self):
-        payload = { "retrieve_message": { "seqnr": 1, 
+        payload = { "retrieve_message": { "seqnr": 0, 
                                           "account_auth" : { "user_account": "",
                                                              "mac_address": self.hostMac },
                                           "info": self.MESSAGE_INFO_CONTROL+self.MESSAGE_INFO_REPORT } }
@@ -154,7 +154,7 @@ class BasePlugin:
         return newCountDown
         
     def Authenticate(self):
-        payload = { "pair_message": { "seqnr": 1, 
+        payload = { "pair_message": { "seqnr": 0, 
                                       "account_auth": { "user_account": "",
                                                         "mac_address": self.hostMac },
                                       "accounts": {"entries": [{"user_account": "",
