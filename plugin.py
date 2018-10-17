@@ -30,9 +30,8 @@ class BasePlugin:
     HTTP_CLIENT_PORT = '10000'
     TARGET_TEMP_UNIT = 1
     ROOM_TEMP_UNIT = 2
-    hostIP = None
-    hostMac = None
-    hostName = None
+    hostMac = '1a:2b:3c:4d:5e:6f'
+    hostName = 'Domoticz atag-one API'
     hostAuth = True
     atagConn = None
     countDown = -1
@@ -42,21 +41,17 @@ class BasePlugin:
         return
 
     def onStart(self):
-        self.GetHostInfo()
-        if (self.hostMac != None):
-            if not (self.TARGET_TEMP_UNIT in Devices):
-                Domoticz.Device(Name="TargetTemp",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1).Create()
-                UpdateDevice(self.TARGET_TEMP_UNIT, 0, "0.0")
-                
-            if not (self.ROOM_TEMP_UNIT in Devices):
-                Domoticz.Device(Name="RoomTemp", Unit=self.ROOM_TEMP_UNIT, TypeName='Temperature').Create()
-                UpdateDevice(self.ROOM_TEMP_UNIT, 0, "0.0")
-                
-            self.SetupConnection()
-            Domoticz.Heartbeat(10)
-            DumpConfigToLog()
-        else:
-            Domoticz.Error('FAILED TO INITIALIZE HOST INFORMATION! PLUGIN DISABLED!')
+        if not (self.TARGET_TEMP_UNIT in Devices):
+            Domoticz.Device(Name="TargetTemp",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1).Create()
+            UpdateDevice(self.TARGET_TEMP_UNIT, 0, "0.0")
+            
+        if not (self.ROOM_TEMP_UNIT in Devices):
+            Domoticz.Device(Name="RoomTemp", Unit=self.ROOM_TEMP_UNIT, TypeName='Temperature').Create()
+            UpdateDevice(self.ROOM_TEMP_UNIT, 0, "0.0")
+            
+        self.SetupConnection()
+        Domoticz.Heartbeat(10)
+        DumpConfigToLog()
 
     def onStop(self):
         Domoticz.Log("onStop called")
@@ -196,6 +191,7 @@ class BasePlugin:
             Domoticz.Log('Atag One invalid pairing response')
         return newCountDown
       
+'''      
     def GetHostInfo(self):
         if (self.hostIP == None):
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -205,7 +201,7 @@ class BasePlugin:
                 # get host IP address and hostname
                 self.hostIP = s.getsockname()[0]
                 self.hostName = s.gethostname().split('.')[0] + 'atag-one API'
-                '''                
+                # ' ''   
                 # get host mac address for external IP/NIC
                 interfaces = socket.if_nameindex()
                 for index, ifname in interfaces:
@@ -219,7 +215,7 @@ class BasePlugin:
                                             struct.pack('256s',  bytes(ifname[:15], 'utf-8'))
                                             )
                         self.HostMac = ''.join(l + '-' * (n % 2 == 1) for n, l in enumerate(binascii.hexlify(info[18:24]).decode('utf-8')))[:-1]
-                '''             
+                # ' ''
                 self.hostMac = '1a:2b:3c:4d:5e:6f'           
                 Domoticz.Log('Host info: IP='+self.HostIP+' Mac='+self.HostMac+' hostname='+self.HostName)
             except:
@@ -229,7 +225,8 @@ class BasePlugin:
                 Domoticz.Error('Host info: Failed')
             finally:
                 s.close()
-
+'''
+                        
 global _plugin
 _plugin = BasePlugin()
 
