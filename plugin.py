@@ -3,12 +3,12 @@
 # Author: MCorino
 #
 """
-<plugin key="AtagOneLocal" name="AtagOne Local plugin" author="mcorino" version="1.0.0" wikilink="http://www.domoticz.com/wiki/plugins/AtagOneLocal.html" externallink="https://github.com/mcorino/Domoticz-AtagOne-Local">
+<plugin key="AtagOneLocal" name="AtagOne Local" author="mcorino" version="1.0.0" wikilink="https://github.com/mcorino/Domoticz-AtagOne-Local" externallink="http://atag.one/">
     <description>
         <h2>AtagOne Local plugin</h2><br/>
         Provides direct local network access to an installed Atag One thermostat.
         Based on the code developed by Rob Juurlink (https://github.com/kozmoz/atag-one-api).
-        Creates a thermostat setpoint sensor and a thermostat temperature sensor.
+        Creates a thermostat setpoint sensor and a temperature sensor.
     </description>
     <params>
         <param field="Address" label="IP Address of Atag One" width="200px" required="true" default="127.0.0.1"/>
@@ -16,7 +16,7 @@
 </plugin>
 """
 import Domoticz
-import socket
+#import socket
 import json
 
 class BasePlugin:
@@ -28,6 +28,8 @@ class BasePlugin:
     MESSAGE_INFO_WIFISCAN = 32
     MESSAGE_INFO_EXTRA = 64
     HTTP_CLIENT_PORT = '10000'
+    TARGET_TEMP_UNIT = 1
+    ROOM_TEMP_UNIT = 2
     #HostIP = None
     #HostMac = None
     #HostName = None
@@ -40,14 +42,16 @@ class BasePlugin:
 
     def onStart(self):
         DumpConfigToLog()
-        Domoticz.Heartbeat(10)
         
-        if (len(Devices) == 0):
-            Domoticz.Device(Name="TargetTemp",  Unit=1, Type=242,  Subtype=1).Create()
-            Domoticz.Device(Name="RoomTemp", Unit=2, TypeName='Temperature').Create()
+        if not (self.TARGET_TEMP_UNIT in Devices):
+            Domoticz.Device(Name="TargetTemp",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1).Create()
+            
+        if not (self.ROOM_TEMP_UNIT in Devices):
+            Domoticz.Device(Name="RoomTemp", Unit=self.ROOM_TEMP_UNIT, TypeName='Temperature').Create()
             
         self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
         self.atagConn.Connect()
+        Domoticz.Heartbeat(10)
         Domoticz.Log("onStart called")
 
     def onStop(self):
@@ -55,24 +59,11 @@ class BasePlugin:
 
     def onConnect(self, Connection, Status, Description):
         if (Status == 0):
-            Domoticz.Debug("Atag One connected successfully.")
-            payload = { "retrieve_message": { "seqnr":0, 
-                                              "account_auth" : { "user_account": "",
-                                                                 "mac_address": "xx" },
-                                              "info": self.MESSAGE_INFO_CONTROL+self.MESSAGE_INFO_REPORT } }
-            sendData = { 'Verb' : 'POST',
-                         'URL'  : '/retrieve',
-                         'Headers' : { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', \
-                                       'Connection': 'keep-alive', \
-                                       'Accept': 'Content-Type: */*; charset=UTF-8', \
-                                       'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT), \
-                                       'User-Agent':'Domoticz/1.0' },
-                         'Data' : json.dumps(payload)
-                       }
-            Connection.Send(sendData)
+            Domoticz.Debug("Atag One connected successfully. Requesting details")
+            self.RequestDetails()
         else:
             Domoticz.Log("Failed to connect ("+str(Status)+") to: "+Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT)+" with error: "+Description)
-        Domoticz.Log("onConnect called")
+            self.countDown = 0
 
     def onMessage(self, Connection, Data):
         Status = int(Data["Status"])
@@ -89,8 +80,8 @@ class BasePlugin:
                     targetTemp = control['ch_mode_temp']
                     boilerStatus = int(report['boiler_status'])
                     Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp)+' targetTemp='+str(targetTemp)+' boilerStatus='+str(boilerStatus))
-                    UpdateDevice(1, int(targetTemp), str(targetTemp))
-                    UpdateDevice(2, int(roomTemp), str(roomTemp))
+                    UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp))
+                    UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
                 else:
                     Domoticz.Log('Atag One /retrieve failed')
                     newCountDown = 3 # retry on next Heartbeat
@@ -99,7 +90,6 @@ class BasePlugin:
                 newCountDown = 3 # retry on next Heartbeat
         else:
             Domoticz.Error('Atag One returned status='+Data['Status'])
-        self.atagConn.Disconnect()
         self.countDown = newCountDown
         Domoticz.Log("onMessage called")
 
@@ -115,9 +105,29 @@ class BasePlugin:
     def onHeartbeat(self):
         self.countDown = self.countDown + 1
         if self.countDown == 6:
-            self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
-            self.atagConn.Connect()
+            if (self.atagConn == None) or (not self.atagConn.Connected()):
+                Domoticz.Log('Attempting to reconnect AtagOne')
+                self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
+                self.atagConn.Connect()
+            else:
+                Domoticz.Log('Requesting AtagOne details')
+                self.RequestDetails()
 
+    def RequestDetails(self):
+        payload = { "retrieve_message": { "seqnr":0, 
+                                          "account_auth" : { "user_account": "",
+                                                             "mac_address": "1a:2b:3c:4d:5e:6f" },
+                                          "info": self.MESSAGE_INFO_CONTROL+self.MESSAGE_INFO_REPORT } }
+        sendData = { 'Verb' : 'POST',
+                     'URL'  : '/retrieve',
+                     'Headers' : { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', \
+                                   'Connection': 'keep-alive', \
+                                   'Accept': 'Content-Type: */*; charset=UTF-8', \
+                                   'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT), \
+                                   'User-Agent':'Domoticz/1.0' },
+                     'Data' : json.dumps(payload)
+                   }
+        self.atagConn.Send(sendData)
       
 '''        
     def GetHostInfo(self):
