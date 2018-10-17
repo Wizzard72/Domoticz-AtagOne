@@ -12,6 +12,7 @@
     </description>
     <params>
         <param field="Address" label="IP Address of Atag One" width="200px" required="true" default="127.0.0.1"/>
+        <param field="Mode1" label="Domoticz MAC" width="600px" required="true" default="1A-2B-3C-4D-5E-6F"/>
     </params>
 </plugin>
 """
@@ -45,6 +46,7 @@ class BasePlugin:
         return
 
     def onStart(self):
+        self.hostMac = str(Parameter['Mode1'])
         if not (self.TARGET_TEMP_UNIT in Devices):
             Domoticz.Device(Name="TargetTemp",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1).Create()
             UpdateDevice(self.TARGET_TEMP_UNIT, 0, "0.0")
