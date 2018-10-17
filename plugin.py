@@ -33,8 +33,8 @@ class BasePlugin:
     ROOM_TEMP_UNIT = 2
     TEMPERATURE_MIN = 4.0
     TEMPERATURE_MAX = 27.0
-    FLAME_ON_IMG = 'atag_one_flame_on'
-    FLAME_OFF_IMG = 'atag_one_flame_off'
+    FLAME_ON_IMG = 'AtagOneFlame'
+    FLAME_OFF_IMG = 'AtagOneNoFlame'
     hostMac = '1a-2b-3c-4d-5e-6f' # 'unique' MAC
     hostName = 'Domoticz atag-one API'
     hostAuth = True
