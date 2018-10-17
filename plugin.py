@@ -91,7 +91,7 @@ class BasePlugin:
         Status = int(Data["Status"])
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
-            Domoticz.Debug('Atag One response: '+strData)
+            Domoticz.Log('Atag One response: '+strData)
             atagResponse = json.loads(strData)
             if ('retrieve_reply' in atagResponse):
                 self.countDown = self.ProcessDetails(atagResponse['retrieve_reply'])
@@ -233,6 +233,7 @@ class BasePlugin:
             Domoticz.Error('Invalid temperature setting : '+str(target)+'. Should be >='+str(self.TEMPERATURE_MIN)+' and <='+str(self.TEMPERATURE_MAX))
             return
         
+        Domoticz.Log('Updating target temperatur to '+str(target))
         payload = { "update_message": { "seqnr": 0, 
                                         "account_auth" : { "user_account": "",
                                                             "mac_address": self.hostMac },
