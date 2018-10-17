@@ -218,7 +218,7 @@ class BasePlugin:
                                                                 "device_name": self.hostName,
                                                                 "account_type": 0}]} } }
         sendData = { 'Verb' : 'POST',
-                     'URL'  : '/retrieve',
+                     'URL'  : '/pair_message',
                      'Headers' : { 'User-Agent': "Mozilla/5.0 (compatible; AtagOneLocalAPI/1.0.0; http://atag.one/)",
                                    'X-OneApp-Version': '1.0.0', \
                                    'Content-Type': 'application/json; UTF-8', \
@@ -261,7 +261,7 @@ class BasePlugin:
                                                             "mac_address": self.hostMac },
                                         "control": { "ch_mode_temp": target } } }
         sendData = { 'Verb' : 'POST',
-                     'URL'  : '/retrieve',
+                     'URL'  : '/update',
                      'Headers' : { 'User-Agent': "Mozilla/5.0 (compatible; AtagOneLocalAPI/1.0.0; http://atag.one/)",
                                    'X-OneApp-Version': '1.0.0', \
                                    'Content-Type': 'application/json; UTF-8', \
