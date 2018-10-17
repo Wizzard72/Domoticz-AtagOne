@@ -102,7 +102,7 @@ class BasePlugin:
 
     def onCommand(self, Unit, Command, Level, Hue):
         Domoticz.Log("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
-        if (Unit == self.TARGET_TEMP_UNIT) and (Unit in Devices) and (Command == 'Set Level'):
+        if (int(Unit) == self.TARGET_TEMP_UNIT) and (int(Unit) in Devices) and (str(Command) == 'Set Level'):
             if (self.atagConn == None) or (not self.atagConn.Connected()):
                 self.setLevel = True
                 self.newLevel = Level
