@@ -46,7 +46,7 @@ class BasePlugin:
         return
 
     def onStart(self):
-        self.hostMac = str(Parameter['Mode1'])
+        self.hostMac = str(Parameters['Mode1'])
         if not (self.TARGET_TEMP_UNIT in Devices):
             Domoticz.Device(Name="TargetTemp",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1).Create()
             UpdateDevice(self.TARGET_TEMP_UNIT, 0, "0.0")
