@@ -30,9 +30,13 @@ class BasePlugin:
     HTTP_CLIENT_PORT = '10000'
     TARGET_TEMP_UNIT = 1
     ROOM_TEMP_UNIT = 2
-    hostMac = '1a:2b:3c:4d:5e:6f'
+    TEMPERATURE_MIN = 4.0
+    TEMPERATURE_MAX = 27.0
+    hostMac = '1a-2b-3c-4d-5e-6f' # 'unique' MAC
     hostName = 'Domoticz atag-one API'
     hostAuth = True
+    setLevel = False
+    newLevel = None
     atagConn = None
     countDown = -1
     
@@ -60,8 +64,12 @@ class BasePlugin:
         if (Status == 0):
             Domoticz.Log("Atag One connected successfully.")
             if self.hostAuth:
-                Domoticz.Log("Requesting AtagOne details.")
-                self.RequestDetails()
+                if self.setLevel:
+                    Domoticz.Log("Setting AtagOne target temperature.")
+                    self.UpdateTargetTemp(self.newLevel)
+                else:
+                    Domoticz.Log("Requesting AtagOne details.")
+                    self.RequestDetails()
             else:
                 Domoticz.Log("Requesting AtagOne authorization.")
                 self.Authenticate()
@@ -71,25 +79,38 @@ class BasePlugin:
 
     def onMessage(self, Connection, Data):
         Status = int(Data["Status"])
-        newCountDown = 6
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
-            Domoticz.Log('Atag One response: '+strData)
+            Domoticz.Debug('Atag One response: '+strData)
             atagResponse = json.loads(strData)
             if ('retrieve_reply' in atagResponse):
-                newCountDown = self.ProcessDetails(atagResponse['retrieve_reply'])
+                self.countDown = self.ProcessDetails(atagResponse['retrieve_reply'])
+                return
+            
+            if ('pair_reply' in atagResponse):
+                self.countDown = self.ProcessAuthorization(atagResponse['pair_reply'])
+                return
+            
+            if ('update_reply' in atagResponse):
+                self.ProcessUpdate(atagResponse['update_reply'])
             else:
-                if ('pair_reply' in atagResponse):
-                    newCountDown = self.ProcessAuthorization(atagResponse['pair_reply'])
-                else:
-                    Domoticz.Log('Unknown response from AtagOne')
+                Domoticz.Log('Unknown response from AtagOne')
         else:
             Domoticz.Error('Atag One returned status='+Data['Status'])
-        self.countDown = newCountDown
+        self.countDown = 6
         Domoticz.Log("onMessage called")
 
     def onCommand(self, Unit, Command, Level, Hue):
         Domoticz.Log("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
+        if (Unit == self.TARGET_TEMP_UNIT) and (Unit in Devices) and (Command == 'Set Level'):
+            if (self.atagConn == None) or (not self.atagConn.Connected()):
+                self.setLevel = True
+                self.newLevel = Level
+                Domoticz.Debug('Attempting to reconnect AtagOne')
+                self.SetupConnection()
+            else:
+                Domoticz.Log("Setting AtagOne target temperature.")
+                self.UpdateTargetTemp(Level)
 
     def onNotification(self, Name, Subject, Text, Status, Priority, Sound, ImageFile):
         Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
@@ -101,7 +122,7 @@ class BasePlugin:
         if self.countDown >= 0: self.countDown -= 1
         if self.countDown == 0:
             if (self.atagConn == None) or (not self.atagConn.Connected()):
-                Domoticz.Log('Attempting to reconnect AtagOne')
+                Domoticz.Debug('Attempting to reconnect AtagOne')
                 self.SetupConnection()
             else:
                 if self.hostAuth:
@@ -144,13 +165,13 @@ class BasePlugin:
                 UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp))
                 UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
             else:
-                Domoticz.Log('Atag One invalid /retrieve response')
+                Domoticz.Log('Atag One invalid retrieve response')
         else:
-            if (('acc_status' in response) and (int(response['acc_status']) != 2)):
+            if (('acc_status' in response) and (int(response['acc_status']) == 3)):
                 self.hostAuth = False
                 newCountDown = 1
             else:
-                Domoticz.Log('Atag One invalid /retrieve response')
+                Domoticz.Log('Atag One missing retrieve response')
         return newCountDown
         
     def Authenticate(self):
@@ -191,42 +212,39 @@ class BasePlugin:
             Domoticz.Log('Atag One invalid pairing response')
         return newCountDown
       
-'''      
-    def GetHostInfo(self):
-        if (self.hostIP == None):
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            try:
-                # doesn't even have to be reachable
-                s.connect(('10.255.255.255', 1))
-                # get host IP address and hostname
-                self.hostIP = s.getsockname()[0]
-                self.hostName = s.gethostname().split('.')[0] + 'atag-one API'
-                # ' ''   
-                # get host mac address for external IP/NIC
-                interfaces = socket.if_nameindex()
-                for index, ifname in interfaces:
-                    ifip = socket.inet_ntoa(fcntl.ioctl(s.fileno(),
-                                            0x8915,  # SIOCGIFADDR
-                                            struct.pack('256s', bytes(ifname[:15], 'utf-8'))
-                                            )[20:24])
-                    if (ifip == self.HostIP):
-                        info = fcntl.ioctl(s.fileno(), 
-                                            0x8927,  
-                                            struct.pack('256s',  bytes(ifname[:15], 'utf-8'))
-                                            )
-                        self.HostMac = ''.join(l + '-' * (n % 2 == 1) for n, l in enumerate(binascii.hexlify(info[18:24]).decode('utf-8')))[:-1]
-                # ' ''
-                self.hostMac = '1a:2b:3c:4d:5e:6f'           
-                Domoticz.Log('Host info: IP='+self.HostIP+' Mac='+self.HostMac+' hostname='+self.HostName)
-            except:
-                self.hostIP = '127.0.0.1'
-                self.hostName = 'localhost'
-                self.hostMac = None #unimportant because we cannot reach remote devices now anyway
-                Domoticz.Error('Host info: Failed')
-            finally:
-                s.close()
-'''
-                        
+    def UpdateTargetTemp(self, target):
+        self.setLevel = False        
+        if (float(target) < self.TEMPERATURE_MIN) or (float(target) > self.TEMPERATURE_MAX):
+            Domoticz.Error('Invalid temperature setting : '+str(target)+'. Should be >='+str(self.TEMPERATURE_MIN)+' and <='+str(self.TEMPERATURE_MAX))
+            return
+        
+        payload = { "update_message": { "seqnr": 0, 
+                                        "account_auth" : { "user_account": "",
+                                                            "mac_address": self.hostMac },
+                                        "control": { "ch_mode_temp": target } } }
+        sendData = { 'Verb' : 'POST',
+                     'URL'  : '/retrieve',
+                     'Headers' : { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', \
+                                   'Connection': 'keep-alive', \
+                                   'Accept': 'Content-Type: */*; charset=UTF-8', \
+                                   'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT), \
+                                   'User-Agent':'Domoticz/1.0' },
+                     'Data' : json.dumps(payload)
+                   }
+        self.atagConn.Send(sendData)
+        
+    def ProcessUpdate(self, response):
+        if (('acc_status' in response) and int(response['acc_status']) == 2) and ('status' in response):
+            Domoticz.Log('Atag One target temperature updated')
+            if (self.atagConn == None) or (not self.atagConn.Connected()):
+                Domoticz.Debug('Attempting to reconnect AtagOne')
+                self.SetupConnection()
+            else:
+                Domoticz.Log('Requesting AtagOne details')
+                self.RequestDetails()
+        else:
+            Domoticz.Log('Atag One failed update')
+      
 global _plugin
 _plugin = BasePlugin()
 
