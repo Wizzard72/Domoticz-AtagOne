@@ -118,14 +118,12 @@ class BasePlugin:
     def onCommand(self, Unit, Command, Level, Hue):
         Domoticz.Log("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
         if (int(Unit) == self.TARGET_TEMP_UNIT) and (int(Unit) in Devices) and (str(Command) == 'Set Level'):
-            if (self.atagConn == None) or (not self.atagConn.Connected()):
-                self.setLevel = True
-                self.newLevel = Level
-                Domoticz.Debug('Attempting to reconnect AtagOne')
-                self.SetupConnection()
-            else:
-                Domoticz.Log("Setting AtagOne target temperature.")
-                self.UpdateTargetTemp(Level)
+            if (self.atagConn != None) and self.atagConn.Connected():
+                self.atagConn.Disconnect()
+            self.setLevel = True
+            self.newLevel = Level
+            Domoticz.Debug('Attempting to reconnect AtagOne')
+            self.SetupConnection()
 
     def onNotification(self, Name, Subject, Text, Status, Priority, Sound, ImageFile):
         Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
@@ -265,12 +263,10 @@ class BasePlugin:
     def ProcessUpdate(self, response):
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('status' in response):
             Domoticz.Log('Atag One target temperature updated')
-            if (self.atagConn == None) or (not self.atagConn.Connected()):
-                Domoticz.Debug('Attempting to reconnect AtagOne')
-                self.SetupConnection()
-            else:
-                Domoticz.Log('Requesting AtagOne details')
-                self.RequestDetails()
+            if (self.atagConn != None) and self.atagConn.Connected():
+                self.atagConn.Disconnect()
+            Domoticz.Debug('Attempting to reconnect AtagOne')
+            self.SetupConnection()
         else:
             Domoticz.Log('Atag One failed update')
       
