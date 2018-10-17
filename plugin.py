@@ -57,6 +57,9 @@ class BasePlugin:
             Domoticz.Log('Loading flame OFF images')
             Domoticz.Image('flame-off-icons.zip').Create()
 
+        for image in Images:
+            Domoticz.Debug("Icon " + str(Images[image].ID) + " " + Images[image].Name)
+            
         Domoticz.Log('flame ON image='+str(Images[self.FLAME_ON_IMG].ID))
         Domoticz.Log('flame OFF image='+str(Images[self.FLAME_OFF_IMG].ID))
             
