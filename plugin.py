@@ -153,11 +153,13 @@ class BasePlugin:
                                           "info": self.MESSAGE_INFO_CONTROL+self.MESSAGE_INFO_REPORT } }
         sendData = { 'Verb' : 'POST',
                      'URL'  : '/retrieve',
-                     'Headers' : { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', \
+                     'Headers' : { 'User-Agent': "Mozilla/5.0 (compatible; AtagOneLocalAPI/1.0.0; http://atag.one/)",
+                                   'X-OneApp-Version': '1.0.0', \
+                                   'Content-Type': 'application/json; UTF-8', \
                                    'Connection': 'keep-alive', \
-                                   'Accept': 'Content-Type: */*; charset=UTF-8', \
-                                   'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT), \
-                                   'User-Agent':'Domoticz/1.0' },
+                                   'Accept': '*/*', \
+                                   'Accept-Charset': 'UTF-8', \
+                                   'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT) },
                      'Data' : json.dumps(payload)
                    }
         self.atagConn.Send(sendData)
@@ -199,11 +201,13 @@ class BasePlugin:
                                                                 "account_type": 0}]} } }
         sendData = { 'Verb' : 'POST',
                      'URL'  : '/retrieve',
-                     'Headers' : { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', \
+                     'Headers' : { 'User-Agent': "Mozilla/5.0 (compatible; AtagOneLocalAPI/1.0.0; http://atag.one/)",
+                                   'X-OneApp-Version': '1.0.0', \
+                                   'Content-Type': 'application/json; UTF-8', \
                                    'Connection': 'keep-alive', \
-                                   'Accept': 'Content-Type: */*; charset=UTF-8', \
-                                   'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT), \
-                                   'User-Agent':'Domoticz/1.0' },
+                                   'Accept': '*/*', \
+                                   'Accept-Charset': 'UTF-8', \
+                                   'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT) },
                      'Data' : json.dumps(payload)
                    }
         self.atagConn.Send(sendData)
@@ -240,11 +244,13 @@ class BasePlugin:
                                         "control": { "ch_mode_temp": target } } }
         sendData = { 'Verb' : 'POST',
                      'URL'  : '/retrieve',
-                     'Headers' : { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', \
+                     'Headers' : { 'User-Agent': "Mozilla/5.0 (compatible; AtagOneLocalAPI/1.0.0; http://atag.one/)",
+                                   'X-OneApp-Version': '1.0.0', \
+                                   'Content-Type': 'application/json; UTF-8', \
                                    'Connection': 'keep-alive', \
-                                   'Accept': 'Content-Type: */*; charset=UTF-8', \
-                                   'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT), \
-                                   'User-Agent':'Domoticz/1.0' },
+                                   'Accept': '*/*', \
+                                   'Accept-Charset': 'UTF-8', \
+                                   'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT) },
                      'Data' : json.dumps(payload)
                    }
         self.atagConn.Send(sendData)
