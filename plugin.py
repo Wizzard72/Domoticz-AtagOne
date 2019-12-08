@@ -194,11 +194,11 @@ class BasePlugin:
                 roomTemp = report['room_temp']
                 targetTemp = control['ch_mode_temp']
                 boilerStatus = int(report['boiler_status'])
-                outsidetemp = report['outside_temp']
+                outsideTemp = report['outside_temp']
                 Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp))
                 Domoticz.Log('Atag One status retrieved: targetTemp='+str(targetTemp))
                 Domoticz.Log('Atag One status retrieved: boilerStatus='+str(boilerStatus))
-                Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsidetemp))
+                Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsideTemp))
                 if ((boilerStatus & 8) == 8):
                     Domoticz.Log('Updating with flame ON')
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_ON_IMG].ID)
