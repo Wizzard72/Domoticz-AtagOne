@@ -165,9 +165,10 @@ class BasePlugin:
     def SetupConnection(self):
         self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
         self.atagConn.Connect()
+        self.Authenticate()
 
     def RequestDetails(self):
-        payload = { "retrieve_message": { "seqnr": 0, 
+        payload = { "retrieve_message": { "seqnr": 1, 
                                           "account_auth" : { "user_account": "",
                                                              "mac_address": self.hostMac },
                                           "info": self.MESSAGE_INFO_CONTROL+self.MESSAGE_INFO_REPORT } }
@@ -214,7 +215,7 @@ class BasePlugin:
         return newCountDown
         
     def Authenticate(self):
-        payload = { "pair_message": { "seqnr": 0, 
+        payload = { "pair_message": { "seqnr": 1, 
                                       "account_auth": { "user_account": "",
                                                         "mac_address": self.hostMac },
                                       "accounts": {"entries": [{"user_account": "",
