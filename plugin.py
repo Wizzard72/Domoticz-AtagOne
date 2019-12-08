@@ -80,11 +80,11 @@ class BasePlugin:
             UpdateDevice(self.TARGET_TEMP_UNIT, 0, "0.0")
             
         if (self.ROOM_TEMP_UNIT not in Devices):
-            Domoticz.Device(Name="RoomTemp", Unit=self.ROOM_TEMP_UNIT, TypeName='Temperature').Create()
+            Domoticz.Device(Name="Room Temperature", Unit=self.ROOM_TEMP_UNIT, TypeName='Temperature').Create()
             UpdateDevice(self.ROOM_TEMP_UNIT, 0, "0.0")
             
         if (self.OUTSIDE_TEMP_UNIT not in Devices):
-            Domoticz.Device(Name="OutsideTemp", Unit=self.OUTSIDE_TEMP_UNIT, TypeName='Temperature').Create()
+            Domoticz.Device(Name="Outside Temperature", Unit=self.OUTSIDE_TEMP_UNIT, TypeName='Temperature').Create()
             UpdateDevice(self.OUTSIDE_TEMP_UNIT, 0, "0.0")
             
         self.SetupConnection()
