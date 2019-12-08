@@ -190,10 +190,11 @@ class BasePlugin:
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response) and ('control' in response):
             report = response['report']
             control = response['control']
-            if ('room_temp' in report) and ('boiler_status' in report) and ('ch_mode_temp' in control):
+            if ('room_temp' in report) and ('boiler_status' in report) and ('ch_mode_temp' in control) and ('outside_temp' in report):
                 roomTemp = report['room_temp']
                 targetTemp = control['ch_mode_temp']
                 boilerStatus = int(report['boiler_status'])
+                outsidetemp = report['outside_temp']
                 Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp)+' targetTemp='+str(targetTemp)+' boilerStatus='+str(boilerStatus))
                 if ((boilerStatus & 8) == 8):
                     Domoticz.Log('Updating with flame ON')
