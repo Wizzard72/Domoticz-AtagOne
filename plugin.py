@@ -3,7 +3,7 @@
 # Author: MCorino
 #
 """
-<plugin key="AtagOneLocal" name="AtagOne Local" author="mcorino" version="1.0.0" wikilink="https://github.com/mcorino/Domoticz-AtagOne-Local" externallink="http://atag.one/">
+<plugin key="AtagOneLocal" name="AtagOne on-premise" author="mcorino" version="1.0.0" wikilink="https://github.com/mcorino/Domoticz-AtagOne-Local" externallink="http://atag.one/">
     <description>
         <h2>AtagOne Local plugin</h2><br/>
         Provides direct local network access to an installed Atag One thermostat.
