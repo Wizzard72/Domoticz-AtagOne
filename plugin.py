@@ -37,6 +37,7 @@ class BasePlugin:
     HTTP_CLIENT_PORT = '10000'
     TARGET_TEMP_UNIT = 1
     ROOM_TEMP_UNIT = 2
+    OUTSIDE_TEMP_UNIT = 2
     TEMPERATURE_MIN = 4.0
     TEMPERATURE_MAX = 27.0
     FLAME_ON_IMG = 'AtagOneLocalFlame'
@@ -81,6 +82,10 @@ class BasePlugin:
         if (self.ROOM_TEMP_UNIT not in Devices):
             Domoticz.Device(Name="RoomTemp", Unit=self.ROOM_TEMP_UNIT, TypeName='Temperature').Create()
             UpdateDevice(self.ROOM_TEMP_UNIT, 0, "0.0")
+            
+        if (self.OUTSIDE_TEMP_UNIT not in Devices):
+            Domoticz.Device(Name="OutsideTemp", Unit=self.OUTSIDE_TEMP_UNIT, TypeName='Temperature').Create()
+            UpdateDevice(self.OUTSIDE_TEMP_UNIT, 0, "0.0")
             
         self.SetupConnection()
         Domoticz.Heartbeat(10)
