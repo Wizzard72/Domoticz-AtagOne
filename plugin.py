@@ -82,7 +82,7 @@ class BasePlugin:
         Domoticz.Debug('flame OFF image='+str(Images[self.FLAME_OFF_IMG].ID))
             
         if (self.TARGET_TEMP_UNIT not in Devices):
-            Domoticz.Device(Name="TargetTemp",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1, Image=Images[self.FLAME_OFF_IMG].ID).Create()
+            Domoticz.Device(Name="Room Setpoint",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1, Image=Images[self.FLAME_OFF_IMG].ID).Create()
             UpdateDevice(self.TARGET_TEMP_UNIT, 0, "0.0")
             
         if (self.ROOM_TEMP_UNIT not in Devices):
