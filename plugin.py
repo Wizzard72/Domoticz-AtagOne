@@ -42,7 +42,7 @@ class BasePlugin:
     CH_SETPOINT_UNIT = 5
     DHW_WATER_TEMP_UNIT = 6
     CH_WATER_TEMP_UNIT = 7
-    DHW_WATER_PRES_UNIT = 8
+    CH_WATER_PRES_UNIT = 8
     CH_RETURN_TEMP_UNIT  = 9
     TEMPERATURE_MIN = 4.0
     TEMPERATURE_MAX = 27.0
@@ -109,9 +109,9 @@ class BasePlugin:
             Domoticz.Device(Name="CH Water Temperature", Unit=self.CH_WATER_TEMP_UNIT, TypeName='Temperature').Create()
             UpdateDevice(self.CH_WATER_TEMP_UNIT, 0, "0.0")
             
-        if (self.DHW_WATER_PRES_UNIT not in Devices):
-            Domoticz.Device(Name="DHW Water Pressure", Unit=self.DHW_WATER_PRES_UNIT, TypeName='Pressure').Create()
-            UpdateDevice(self.DHW_WATER_PRES_UNIT, 0, "0.0")
+        if (self.CH_WATER_PRES_UNIT not in Devices):
+            Domoticz.Device(Name="CH Water Pressure", Unit=self.CH_WATER_PRES_UNIT, TypeName='Pressure').Create()
+            UpdateDevice(self.CH_WATER_PRES_UNIT, 0, "0.0")
             
         if (self.CH_RETURN_TEMP_UNIT not in Devices):
             Domoticz.Device(Name="CH Return Temperature", Unit=self.CH_RETURN_TEMP_UNIT, TypeName='Temperature').Create()
@@ -234,6 +234,12 @@ class BasePlugin:
                 Domoticz.Log('Atag One status retrieved: targetTemp='+str(targetTemp))
                 Domoticz.Log('Atag One status retrieved: boilerStatus='+str(boilerStatus))
                 Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsideTemp))
+                Domoticz.Log('Atag One status retrieved: burning_hours='+str(burning_hours))
+                Domoticz.Log('Atag One status retrieved: ch_setpoint='+str(ch_setpoint))
+                Domoticz.Log('Atag One status retrieved: dhw_water_temp='+str(dhw_water_temp))
+                Domoticz.Log('Atag One status retrieved: ch_water_temp='+str(ch_water_temp))
+                Domoticz.Log('Atag One status retrieved: dhw_water_pres='+str(ch_water_pres))
+                Domoticz.Log('Atag One status retrieved: ch_return_temp='+str(ch_return_temp))
                 if ((boilerStatus & 8) == 8):
                     Domoticz.Log('Updating with flame ON')
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_ON_IMG].ID)
@@ -242,6 +248,12 @@ class BasePlugin:
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_OFF_IMG].ID)
                 UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
                 UpdateDevice(self.OUTSIDE_TEMP_UNIT, int(outsideTemp), str(outsideTemp))
+                UpdateDevice(self.BURNING_HOURS_UNIT, int(burning_hours), str(burning_hours))
+                UpdateDevice(self.CH_SETPOINT_UNIT, int(ch_setpoint), str(ch_setpoint))
+                UpdateDevice(self.DHW_WATER_TEMP_UNIT, int(dhw_water_temp), str(dhw_water_temp))
+                UpdateDevice(self.CH_WATER_TEMP_UNIT, int(ch_water_temp), str(ch_water_temp))
+                UpdateDevice(self.CH_WATER_PRES_UNIT, int(ch_water_pres), str(ch_water_pres))
+                UpdateDevice(self.CH_RETURN_TEMP_UNIT, int(ch_return_temp), str(ch_return_temp))
             else:
                 Domoticz.Log('Atag One invalid retrieve response')
         else:
