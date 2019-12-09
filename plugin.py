@@ -94,7 +94,7 @@ class BasePlugin:
             UpdateDevice(self.OUTSIDE_TEMP_UNIT, 0, "0.0")
             
         if (self.BURNING_HOURS_UNIT not in Devices):
-            Domoticz.Device(Name="Burning Hours", Unit=self.BURNING_HOURS_UNIT, TypeName='Counter Incremental').Create()
+            Domoticz.Device(Name="Burning Hours", Unit=self.BURNING_HOURS_UNIT, TypeName='Custom').Create()
             UpdateDevice(self.BURNING_HOURS_UNIT, 0, "0.0")
             
         if (self.CH_SETPOINT_UNIT not in Devices):
