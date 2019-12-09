@@ -225,7 +225,7 @@ class BasePlugin:
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response) and ('control' in response):
             report = response['report']
             control = response['control']
-            if ('room_temp' in report) and ('boiler_status' in report) and ('ch_mode_temp' in control) and ('outside_temp' in report):
+            if ('room_temp' in report) and ('boiler_status' in report) and ('ch_mode_temp' in control) and ('outside_temp' in report) and ('burning_hours' in report) and ('ch_setpoint' in report) and ('dhw_water_temp' in report) and ('ch_water_temp' in report) and ('ch_water_pres' in report) and ('ch_return_temp' in report):
                 roomTemp = report['room_temp']
                 targetTemp = control['ch_mode_temp']
                 boilerStatus = int(report['boiler_status'])
