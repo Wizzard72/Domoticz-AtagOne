@@ -234,43 +234,69 @@ class BasePlugin:
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response) and ('control' in response):
             report = response['report']
             control = response['control']
-            if ('room_temp' in report) and ('boiler_status' in report) and ('ch_mode_temp' in control) and ('outside_temp' in report) and ('burning_hours' in report) and ('ch_setpoint' in report) and ('dhw_water_temp' in report) and ('ch_water_temp' in report) and ('ch_water_pres' in report) and ('ch_return_temp' in report):
+            if ('room_temp' in report):
                 roomTemp = report['room_temp']
-                targetTemp = control['ch_mode_temp']
-                boilerStatus = int(report['boiler_status'])
-                outsideTemp = report['outside_temp']
-                burningHours = report['burning_hours']
-                chSetpoint = report['ch_setpoint']
-                dhwWaterTemp = report['dhw_water_temp']
-                chWaterTemp = report['ch_water_temp']
-                chWaterPres = report['ch_water_pres']
-                chReturnTemp = report['ch_return_temp']
                 Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp))
-                Domoticz.Log('Atag One status retrieved: targetTemp='+str(targetTemp))
+                UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (room_temp)')
+            if ('boiler_status' in report):
+                boilerStatus = int(report['boiler_status'])
                 Domoticz.Log('Atag One status retrieved: boilerStatus='+str(boilerStatus))
-                Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsideTemp))
-                Domoticz.Log('Atag One status retrieved: burning_hours='+str(burningHours))
-                Domoticz.Log('Atag One status retrieved: ch_setpoint='+str(chSetpoint))
-                Domoticz.Log('Atag One status retrieved: dhw_water_temp='+str(dhwWaterTemp))
-                Domoticz.Log('Atag One status retrieved: ch_water_temp='+str(chWaterTemp))
-                Domoticz.Log('Atag One status retrieved: dhw_water_pres='+str(chWaterPres))
-                Domoticz.Log('Atag One status retrieved: ch_return_temp='+str(chReturnTemp))
                 if ((boilerStatus & 8) == 8):
                     Domoticz.Log('Updating with flame ON')
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_ON_IMG].ID)
                 else:
                     Domoticz.Log('Updating with flame OFF')
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_OFF_IMG].ID)
-                UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (boiler_status)')
+            if ('ch_mode_temp' in control):
+                targetTemp = control['ch_mode_temp']
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (ch_mode_temp)')
+            if ('outside_temp' in report):
+                outsideTemp = report['outside_temp']
+                Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsideTemp))
                 UpdateDevice(self.OUTSIDE_TEMP_UNIT, int(outsideTemp), str(outsideTemp))
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (outside_temp)')
+            if ('burning_hours' in report):
+                burningHours = report['burning_hours']
+                Domoticz.Log('Atag One status retrieved: burning_hours='+str(burningHours))
                 UpdateDevice(self.BURNING_HOURS_UNIT, int(burningHours), str(burningHours))
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (burning_hours)')
+            if ('ch_setpoint' in report):
+                chSetpoint = report['ch_setpoint']
+                Domoticz.Log('Atag One status retrieved: ch_setpoint='+str(chSetpoint))
                 UpdateDevice(self.CH_SETPOINT_UNIT, int(chSetpoint), str(chSetpoint))
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (ch_setpoint)')
+            if ('dhw_water_temp' in report):
+                dhwWaterTemp = report['dhw_water_temp']
+                Domoticz.Log('Atag One status retrieved: dhw_water_temp='+str(dhwWaterTemp))
                 UpdateDevice(self.DHW_WATER_TEMP_UNIT, int(dhwWaterTemp), str(dhwWaterTemp))
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (dhw_water_temp)')
+            if ('ch_water_temp' in report):
+                chWaterTemp = report['ch_water_temp']
+                Domoticz.Log('Atag One status retrieved: ch_water_temp='+str(chWaterTemp))
                 UpdateDevice(self.CH_WATER_TEMP_UNIT, int(chWaterTemp), str(chWaterTemp))
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (ch_water_temp)')
+            if ('ch_water_pres' in report):
+                chWaterPres = report['ch_water_pres']
+                Domoticz.Log('Atag One status retrieved: dhw_water_pres='+str(chWaterPres))
                 UpdateDevice(self.CH_WATER_PRES_UNIT, int(chWaterPres), str(chWaterPres))
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (ch_water_pres)')
+            if ('ch_return_temp' in report):
+                chReturnTemp = report['ch_return_temp']
+                Domoticz.Log('Atag One status retrieved: ch_return_temp='+str(chReturnTemp))
                 UpdateDevice(self.CH_RETURN_TEMP_UNIT, int(chReturnTemp), str(chReturnTemp))
             else:
-                Domoticz.Log('Atag One invalid retrieve response')
+                Domoticz.Log('Atag One invalid retrieve response (ch_return_temp)')
         else:
             if (('acc_status' in response) and (int(response['acc_status']) == 3)):
                 self.hostAuth = False
