@@ -230,16 +230,22 @@ class BasePlugin:
                 targetTemp = control['ch_mode_temp']
                 boilerStatus = int(report['boiler_status'])
                 outsideTemp = report['outside_temp']
+                burningHours = report['burning_hours']
+                chSetpoint = report['ch_setpoint']
+                dhwWaterTemp = report['dhw_water_temp']
+                chWaterTemp = report['ch_water_temp']
+                chWaterPres = report['ch_water_pres']
+                chReturnTemp = report['ch_return_temp']
                 Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp))
                 Domoticz.Log('Atag One status retrieved: targetTemp='+str(targetTemp))
                 Domoticz.Log('Atag One status retrieved: boilerStatus='+str(boilerStatus))
                 Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsideTemp))
-                Domoticz.Log('Atag One status retrieved: burning_hours='+str(burning_hours))
-                Domoticz.Log('Atag One status retrieved: ch_setpoint='+str(ch_setpoint))
-                Domoticz.Log('Atag One status retrieved: dhw_water_temp='+str(dhw_water_temp))
-                Domoticz.Log('Atag One status retrieved: ch_water_temp='+str(ch_water_temp))
-                Domoticz.Log('Atag One status retrieved: dhw_water_pres='+str(ch_water_pres))
-                Domoticz.Log('Atag One status retrieved: ch_return_temp='+str(ch_return_temp))
+                Domoticz.Log('Atag One status retrieved: burning_hours='+str(burningHours))
+                Domoticz.Log('Atag One status retrieved: ch_setpoint='+str(chSetpoint))
+                Domoticz.Log('Atag One status retrieved: dhw_water_temp='+str(dhwWaterTemp))
+                Domoticz.Log('Atag One status retrieved: ch_water_temp='+str(chWaterTemp))
+                Domoticz.Log('Atag One status retrieved: dhw_water_pres='+str(chWaterPres))
+                Domoticz.Log('Atag One status retrieved: ch_return_temp='+str(chReturnTemp))
                 if ((boilerStatus & 8) == 8):
                     Domoticz.Log('Updating with flame ON')
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_ON_IMG].ID)
@@ -248,12 +254,12 @@ class BasePlugin:
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_OFF_IMG].ID)
                 UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
                 UpdateDevice(self.OUTSIDE_TEMP_UNIT, int(outsideTemp), str(outsideTemp))
-                UpdateDevice(self.BURNING_HOURS_UNIT, int(burning_hours), str(burning_hours))
-                UpdateDevice(self.CH_SETPOINT_UNIT, int(ch_setpoint), str(ch_setpoint))
-                UpdateDevice(self.DHW_WATER_TEMP_UNIT, int(dhw_water_temp), str(dhw_water_temp))
-                UpdateDevice(self.CH_WATER_TEMP_UNIT, int(ch_water_temp), str(ch_water_temp))
-                UpdateDevice(self.CH_WATER_PRES_UNIT, int(ch_water_pres), str(ch_water_pres))
-                UpdateDevice(self.CH_RETURN_TEMP_UNIT, int(ch_return_temp), str(ch_return_temp))
+                UpdateDevice(self.BURNING_HOURS_UNIT, int(burningHours), str(burningHours))
+                UpdateDevice(self.CH_SETPOINT_UNIT, int(chSetpoint), str(chSetpoint))
+                UpdateDevice(self.DHW_WATER_TEMP_UNIT, int(dhwWaterTemp), str(dhwWaterTemp))
+                UpdateDevice(self.CH_WATER_TEMP_UNIT, int(chWaterTemp), str(chWaterTemp))
+                UpdateDevice(self.CH_WATER_PRES_UNIT, int(chWaterPres), str(chWaterPres))
+                UpdateDevice(self.CH_RETURN_TEMP_UNIT, int(chReturnTemp), str(chReturnTemp))
             else:
                 Domoticz.Log('Atag One invalid retrieve response')
         else:
