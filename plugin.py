@@ -1,6 +1,6 @@
-# AtagOne-Local plugin
+# AtagOne-On-Premise plugin
 #
-# Author: MCorino
+# Author: Wizzard72
 #
 """
 <plugin key="AtagOneOnPremise" name="AtagOne on-premise" author="Wizzard72" version="2.0.0" wikilink="https://github.com/Wizzard72/Domoticz-AtagOne" externallink="https://www.atag-one.com//">
