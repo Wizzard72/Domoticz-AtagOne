@@ -87,6 +87,30 @@ class BasePlugin:
             Domoticz.Device(Name="Outside Temperature", Unit=self.OUTSIDE_TEMP_UNIT, TypeName='Temperature').Create()
             UpdateDevice(self.OUTSIDE_TEMP_UNIT, 0, "0.0")
             
+        if (self.BURNING_HOURS_UNIT not in Devices):
+            Domoticz.Device(Name="Burning Hours", Unit=self.BURNING_HOURS_UNIT, TypeName='Counter Incremental').Create()
+            UpdateDevice(self.BURNING_HOURS_UNIT, 0, "0.0")
+            
+        if (self.CH_SETPOINT_UNIT not in Devices):
+            Domoticz.Device(Name="CH Setpoint", Unit=self.CH_SETPOINT_UNIT, TypeName='Setpoint').Create()
+            UpdateDevice(self.CH_SETPOINT_UNIT, 0, "0.0")
+            
+        if (self.DHW_WATER_TEMP_UNIT not in Devices):
+            Domoticz.Device(Name="DHW Water Temperature", Unit=self.DHW_WATER_TEMP_UNIT, TypeName='Temperature').Create()
+            UpdateDevice(self.DHW_WATER_TEMP_UNIT, 0, "0.0")
+            
+        if (self.CH_WATER_TEMP_UNIT not in Devices):
+            Domoticz.Device(Name="CH Water Temperature", Unit=self.CH_WATER_TEMP_UNIT, TypeName='Temperature').Create()
+            UpdateDevice(self.CH_WATER_TEMP_UNIT, 0, "0.0")
+            
+        if (self.DHW_WATER_PRES_UNIT not in Devices):
+            Domoticz.Device(Name="DHW Water Pressure", Unit=self.DHW_WATER_PRES_UNIT, TypeName='Pressure').Create()
+            UpdateDevice(self.DHW_WATER_PRES_UNIT, 0, "0.0")
+            
+        if (self.CH_RETURN_TEMP_UNIT not in Devices):
+            Domoticz.Device(Name="CH Return Temperature", Unit=self.CH_RETURN_TEMP_UNIT, TypeName='Temperature').Create()
+            UpdateDevice(self.CH_RETURN_TEMP_UNIT, 0, "0.0")
+        
         self.SetupConnection()
         Domoticz.Heartbeat(10)
 
