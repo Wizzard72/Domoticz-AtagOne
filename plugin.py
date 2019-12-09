@@ -234,19 +234,12 @@ class BasePlugin:
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response) and ('control' in response):
             report = response['report']
             control = response['control']
-            if ('room_temp' in report):
+            if ('room_temp' in report) and ('ch_mode_temp' in control) and 'boiler_status' in report):
                 roomTemp = report['room_temp']
-                Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp))
-                UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
-            else:
-                Domoticz.Log('Atag One invalid retrieve response (room_temp)')
-            if ('ch_mode_temp' in control):
                 targetTemp = control['ch_mode_temp']
-                Domoticz.Log('Atag One status retrieved: ch_mode_temp='+str(targetTemp))
-            else:
-                Domoticz.Log('Atag One invalid retrieve response (ch_mode_temp)')
-            if ('boiler_status' in report):
                 boilerStatus = int(report['boiler_status'])
+                Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp))
+                Domoticz.Log('Atag One status retrieved: ch_mode_temp='+str(targetTemp))
                 Domoticz.Log('Atag One status retrieved: boilerStatus='+str(boilerStatus))
                 if ((boilerStatus & 8) == 8):
                     Domoticz.Log('Updating with flame ON')
@@ -254,8 +247,9 @@ class BasePlugin:
                 else:
                     Domoticz.Log('Updating with flame OFF')
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_OFF_IMG].ID)
+                UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
             else:
-                Domoticz.Log('Atag One invalid retrieve response (boiler_status)')
+                Domoticz.Log('Atag One invalid retrieve response (room_temp/ch_mode_temp/boiler_status)')
             if ('outside_temp' in report):
                 outsideTemp = report['outside_temp']
                 Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsideTemp))
