@@ -240,6 +240,10 @@ class BasePlugin:
                 UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
             else:
                 Domoticz.Log('Atag One invalid retrieve response (room_temp)')
+            if ('ch_mode_temp' in control):
+                targetTemp = control['ch_mode_temp']
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (ch_mode_temp)')
             if ('boiler_status' in report):
                 boilerStatus = int(report['boiler_status'])
                 Domoticz.Log('Atag One status retrieved: boilerStatus='+str(boilerStatus))
@@ -251,10 +255,6 @@ class BasePlugin:
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_OFF_IMG].ID)
             else:
                 Domoticz.Log('Atag One invalid retrieve response (boiler_status)')
-            if ('ch_mode_temp' in control):
-                targetTemp = control['ch_mode_temp']
-            else:
-                Domoticz.Log('Atag One invalid retrieve response (ch_mode_temp)')
             if ('outside_temp' in report):
                 outsideTemp = report['outside_temp']
                 Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsideTemp))
