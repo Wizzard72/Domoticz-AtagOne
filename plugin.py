@@ -61,6 +61,7 @@ class BasePlugin:
         return
 
     def onStart(self):
+        Domoticz.Debug("onStart called")
         if Parameters["Mode2"] == 'Debug':
             Domoticz.Debugging(1)
             DumpConfigToLog()
@@ -124,6 +125,7 @@ class BasePlugin:
         Domoticz.Log("onStop called")
 
     def onConnect(self, Connection, Status, Description):
+        Domoticz.Debug("onConnect called")
         if (Status == 0):
             Domoticz.Log("Atag One connected successfully.")
             if self.hostAuth:
@@ -141,6 +143,7 @@ class BasePlugin:
             self.countDown = 6
 
     def onMessage(self, Connection, Data):
+        Domoticz.Debug("onMessage called")
         Status = int(Data["Status"])
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
@@ -176,12 +179,14 @@ class BasePlugin:
                 self.UpdateTargetTemp(Level)
 
     def onNotification(self, Name, Subject, Text, Status, Priority, Sound, ImageFile):
+        Domoticz.Debug("onNotification called")
         Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
 
     def onDisconnect(self, Connection):
         Domoticz.Log("onDisconnect called")
 
     def onHeartbeat(self):
+        Domoticz.Debug("onHeartbeat called")
         if (self.atagConn != None) and (self.atagConn.Connecting()):
             return
         if self.countDown >= 0: self.countDown -= 1
@@ -198,11 +203,13 @@ class BasePlugin:
                     self.Authenticate()
 
     def SetupConnection(self):
+        Domoticz.Debug("SetupConnection called")
         self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
         self.atagConn.Connect()
         self.Authenticate()
 
     def RequestDetails(self):
+        Domoticz.Debug("RequestDetails called")
         payload = { "retrieve_message": { "seqnr": 1, 
                                           "account_auth" : { "user_account": "",
                                                              "mac_address": self.hostMac },
@@ -221,6 +228,7 @@ class BasePlugin:
         self.atagConn.Send(sendData)
         
     def ProcessDetails(self, response):
+        Domoticz.Debug("ProcessDetails called")
         newCountDown = 6
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response) and ('control' in response):
             report = response['report']
@@ -273,6 +281,7 @@ class BasePlugin:
         return newCountDown
         
     def Authenticate(self):
+        Domoticz.Debug("Authenticate called")
         payload = { "pair_message": { "seqnr": 1, 
                                       "account_auth": { "user_account": "",
                                                         "mac_address": self.hostMac },
@@ -294,6 +303,7 @@ class BasePlugin:
         self.atagConn.Send(sendData)
         
     def ProcessAuthorization(self, response):
+        Domoticz.Debug("ProcessAuthorization called")
         newCountDown = 6
         if ('acc_status' in response):
             if (int(response['acc_status']) == 2):
@@ -313,6 +323,7 @@ class BasePlugin:
         return newCountDown
       
     def UpdateTargetTemp(self, target):
+        Domoticz.Debug("UpdateTargetTemp called")
         self.setLevel = False        
         if (float(target) < self.TEMPERATURE_MIN) or (float(target) > self.TEMPERATURE_MAX):
             Domoticz.Error('Invalid temperature setting : '+str(target)+'. Should be >='+str(self.TEMPERATURE_MIN)+' and <='+str(self.TEMPERATURE_MAX))
@@ -337,6 +348,7 @@ class BasePlugin:
         self.atagConn.Send(sendData)
         
     def ProcessUpdate(self, response):
+        Domoticz.Debug("ProcessUpdate called")
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('status' in response):
             Domoticz.Log('Atag One target temperature updated')
             if (self.atagConn == None) or (not self.atagConn.Connected()):
