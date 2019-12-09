@@ -242,6 +242,7 @@ class BasePlugin:
                 Domoticz.Log('Atag One invalid retrieve response (room_temp)')
             if ('ch_mode_temp' in control):
                 targetTemp = control['ch_mode_temp']
+                Domoticz.Log('Atag One status retrieved: ch_mode_temp='+str(ch_mode_temp))
             else:
                 Domoticz.Log('Atag One invalid retrieve response (ch_mode_temp)')
             if ('boiler_status' in report):
@@ -356,7 +357,7 @@ class BasePlugin:
             Domoticz.Error('Invalid temperature setting : '+str(target)+'. Should be >='+str(self.TEMPERATURE_MIN)+' and <='+str(self.TEMPERATURE_MAX))
             return
         
-        Domoticz.Log('Updating target temperatur to '+str(target))
+        Domoticz.Log('Updating target temperature to '+str(target))
         payload = { "update_message": { "seqnr": 1, 
                                         "account_auth" : { "user_account": "",
                                                             "mac_address": self.hostMac },
