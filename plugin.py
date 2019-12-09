@@ -98,7 +98,7 @@ class BasePlugin:
             UpdateDevice(self.BURNING_HOURS_UNIT, 0, "0.0")
             
         if (self.CH_SETPOINT_UNIT not in Devices):
-            Domoticz.Device(Name="CH Setpoint", Unit=self.CH_SETPOINT_UNIT, Subtype=1, Image=Images[self.FLAME_OFF_IMG].ID).Create()
+            Domoticz.Device(Name="CH Setpoint", Unit=self.CH_SETPOINT_UNIT, Type=242, Subtype=1, Image=Images[self.FLAME_OFF_IMG].ID).Create()
             UpdateDevice(self.CH_SETPOINT_UNIT, 0, "0.0")
             
         if (self.DHW_WATER_TEMP_UNIT not in Devices):
