@@ -207,6 +207,7 @@ class BasePlugin:
         Domoticz.Debug("SetupConnection called")
         self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
         self.atagConn.Connect()
+        self.Authenticate()
 
     def RequestDetails(self):
         Domoticz.Debug("RequestDetails called")
