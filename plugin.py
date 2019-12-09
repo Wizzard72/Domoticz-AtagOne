@@ -3,10 +3,11 @@
 # Author: MCorino
 #
 """
-<plugin key="AtagOneLocal" name="AtagOne on-premise" author="mcorino" version="1.0.0" wikilink="https://github.com/mcorino/Domoticz-AtagOne-Local" externallink="http://atag.one/">
+<plugin key="AtagOneOnPremise" name="AtagOne on-premise" author="Wizzard72" version="2.0.0" wikilink="https://github.com/Wizzard72/Domoticz-AtagOne" externallink="https://www.atag-one.com//">
     <description>
         <h2>AtagOne Local plugin</h2><br/>
         Provides direct local network access to an installed Atag One thermostat.
+        Forked from code developed by mcorino (https://github.com/mcorino/Domoticz-AtagOne-Local).
         Based on the code developed by Rob Juurlink (https://github.com/kozmoz/atag-one-api).
         Creates a thermostat setpoint sensor and a temperature sensor.
     </description>
