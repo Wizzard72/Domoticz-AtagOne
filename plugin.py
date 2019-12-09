@@ -357,7 +357,7 @@ class BasePlugin:
             return
         
         Domoticz.Log('Updating target temperatur to '+str(target))
-        payload = { "update_message": { "seqnr": 0, 
+        payload = { "update_message": { "seqnr": 1, 
                                         "account_auth" : { "user_account": "",
                                                             "mac_address": self.hostMac },
                                         "control": { "ch_mode_temp": target } } }
