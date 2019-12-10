@@ -127,20 +127,20 @@ class BasePlugin:
 
     def onConnect(self, Connection, Status, Description):
         Domoticz.Debug("onConnect called")
-        Domoticz.Log("Value changed")
-        Domoticz.Log("Status = "+str(Status))
-        Domoticz.Log("Description = "+str(Description))
+        Domoticz.Log("onConnect Value changed")
+        Domoticz.Log("onConnect Status = "+str(Status))
+        Domoticz.Log("onConnect Description = "+str(Description))
         if (Status == 0):
-            Domoticz.Log("Atag One connected successfully.")
+            Domoticz.Log("onConnect Atag One connected successfully.")
             if self.hostAuth:
                 if self.setLevel:
-                    Domoticz.Log("Setting Atag One target temperature.")
+                    Domoticz.Log("onConnect Setting Atag One target temperature.")
                     self.UpdateTargetTemp(self.newLevel)
                 else:
-                    Domoticz.Log("Requesting Atag One details.")
+                    Domoticz.Log("onConnect Requesting Atag One details.")
                     self.RequestDetails()
             else:
-                Domoticz.Log("Requesting Atag One authorization.")
+                Domoticz.Log("onConnect Requesting Atag One authorization.")
                 self.Authenticate()
         else:
             Domoticz.Log("Failed to connect ("+str(Status)+") to: "+Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT)+" with error: "+Description)
