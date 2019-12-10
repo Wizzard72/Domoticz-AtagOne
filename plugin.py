@@ -355,13 +355,14 @@ class BasePlugin:
         return newCountDown
       
     def UpdateTargetTemp(self, target):
-        Domoticz.Debug("UpdateTargetTemp called")
+        Domoticz.Debug("onConnect UpdateTargetTemp called")
+        Domoticz.Log("onConnect target = "+str(target))
         self.setLevel = False        
         if (float(target) < self.TEMPERATURE_MIN) or (float(target) > self.TEMPERATURE_MAX):
             Domoticz.Error('Invalid temperature setting : '+str(target)+'. Should be >='+str(self.TEMPERATURE_MIN)+' and <='+str(self.TEMPERATURE_MAX))
             return
         
-        Domoticz.Log('Updating target temperature to '+str(target))
+        Domoticz.Log('onConnect Updating target temperature to '+str(target))
         payload = { "update_message": { "seqnr": 1, 
                                         "account_auth" : { "user_account": "",
                                                            "mac_address": self.hostMac },
@@ -377,6 +378,7 @@ class BasePlugin:
                                    'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT) },
                      'Data' : json.dumps(payload)
                    }
+        Domoticz.Log("onConnect sendData = "+str(sendData))
         self.atagConn.Send(sendData)
         
     def ProcessUpdate(self, response):
