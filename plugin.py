@@ -152,7 +152,7 @@ class BasePlugin:
         Status = int(Data["Status"])
         Domoticz.Log("Data = "+str(Data))
         Domoticz.Log("Connection = "+str(Connection))
-        if (self.httpConn.Connecting() or self.httpConn.Connected()):
+        if (self.atagConn.Connecting() or self.atagConn.Connected()):
             Domoticz.Debug("onHeartbeat called, Connection is alive.")
             
         if (Status == 200):            
