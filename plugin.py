@@ -369,6 +369,11 @@ class BasePlugin:
         payload = { "update_message": { "seqnr": 0, 
                                         "account_auth":  { "user_account": "",
                                                            "mac_address": self.hostMac },
+                                        "device": null,
+                                        "status": null,
+                                        "report": null,
+                                        "configuration": null,
+                                        "schedules": null,
                                         "control": { "ch_mode_temp": target } } }
         sendData = { 'Verb' : 'POST',
                      'URL'  : '/update',
