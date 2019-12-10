@@ -50,7 +50,7 @@ class BasePlugin:
     FLAME_ON_IMG = 'AtagOneLocalFlame'
     FLAME_OFF_IMG = 'AtagOneLocalNoFlame'
     hostMac = '1a-2b-3c-4d-5e-6f' # 'unique' MAC
-    hostName = 'Domoticz atag-one API'
+    hostName = 'Domoticz Atag One API'
     hostAuth = True
     setLevel = False
     newLevel = None
@@ -134,10 +134,10 @@ class BasePlugin:
                     Domoticz.Log("Setting Atag One target temperature.")
                     self.UpdateTargetTemp(self.newLevel)
                 else:
-                    Domoticz.Log("Requesting AtagOne details.")
+                    Domoticz.Log("Requesting Atag One details.")
                     self.RequestDetails()
             else:
-                Domoticz.Log("Requesting AtagOne authorization.")
+                Domoticz.Log("Requesting Atag One authorization.")
                 self.Authenticate()
         else:
             Domoticz.Log("Failed to connect ("+str(Status)+") to: "+Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT)+" with error: "+Description)
@@ -161,7 +161,7 @@ class BasePlugin:
             if ('update_reply' in atagResponse):
                 self.ProcessUpdate(atagResponse['update_reply'])
             else:
-                Domoticz.Log('Unknown response from AtagOne')
+                Domoticz.Log('Unknown response from Atag One')
         else:
             Domoticz.Error('Atag One returned status='+Data['Status'])
         self.countDown = 6
@@ -173,10 +173,10 @@ class BasePlugin:
             if (self.atagConn == None) or (not self.atagConn.Connected()):
                 self.setLevel = True
                 self.newLevel = Level
-                Domoticz.Debug('Attempting to reconnect AtagOne')
+                Domoticz.Debug('Attempting to reconnect Atag One')
                 self.SetupConnection()
             else:
-                Domoticz.Log('Requesting AtagOne details')
+                Domoticz.Log('Requesting Atag One details')
                 self.UpdateTargetTemp(Level)
 
     def onNotification(self, Name, Subject, Text, Status, Priority, Sound, ImageFile):
@@ -197,10 +197,10 @@ class BasePlugin:
                 self.SetupConnection()
             else:
                 if self.hostAuth:
-                    Domoticz.Log('Requesting AtagOne details')
+                    Domoticz.Log('Requesting Atag One details')
                     self.RequestDetails()
                 else:
-                    Domoticz.Log("Requesting AtagOne authorization.")
+                    Domoticz.Log("Requesting Atag One authorization.")
                     self.Authenticate()
 
     def SetupConnection(self):
@@ -331,14 +331,14 @@ class BasePlugin:
         if ('acc_status' in response):
             if (int(response['acc_status']) == 2):
                 self.hostAuth = True
-                Domoticz.Log('AtagOne connection authorized')
+                Domoticz.Log('Atag One connection authorized')
             else:
                 if (int(response['acc_status']) == 1):
                     newCountDown = 1                    
-                    Domoticz.Log('AtagOne authorization pending')
+                    Domoticz.Log('Atag One authorization pending')
                 else:
                     if (int(response['acc_status']) == 3):
-                        Domoticz.Log('AtagOne authorization denied. Retry in a minute.')
+                        Domoticz.Log('Atag One authorization denied. Retry in a minute.')
                     else:
                         Domoticz.Log('Atag One invalid pairing response: acc_status='+str(response['acc_status']))
         else:
@@ -375,10 +375,10 @@ class BasePlugin:
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('status' in response):
             Domoticz.Log('Atag One target temperature updated')
             if (self.atagConn == None) or (not self.atagConn.Connected()):
-                Domoticz.Log('Requesting AtagOne details')
+                Domoticz.Log('Requesting Atag One details')
                 self.RequestDetails()
             else:
-                Domoticz.Debug('Attempting to reconnect AtagOne')
+                Domoticz.Debug('Attempting to reconnect Atag One')
                 self.SetupConnection()
         else:
             Domoticz.Log('Atag One failed update')
