@@ -135,6 +135,7 @@ class BasePlugin:
             if self.hostAuth:
                 if self.setLevel:
                     Domoticz.Log("onConnect Setting Atag One target temperature.")
+                    Domoticz.Log("onConnect newLevel = "+str(self.newLevel))
                     self.UpdateTargetTemp(self.newLevel)
                 else:
                     Domoticz.Log("onConnect Requesting Atag One details.")
