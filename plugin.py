@@ -147,7 +147,8 @@ class BasePlugin:
         Domoticz.Log("onMessage called")
         Domoticz.Debug("onMessage called")
         Status = int(Data["Status"])
-        Domoticz.Log("Status = "+Status)
+        Domoticz.Log("Data = "+Data)
+        Domoticz.Log("Connection = "+Connection)
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
             Domoticz.Debug('Atag One response: '+strData)
