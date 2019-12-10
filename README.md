@@ -15,6 +15,6 @@ To install the plugin login to the Raspberry Pi.
 
 The plugin requires the following information:
   
-    IP Address of the Atag One Thermostat
+      IP Address of the Atag One Thermostat
     
-    MAC Address of the Domoticz Server
+      MAC Address of the Domoticz Server
