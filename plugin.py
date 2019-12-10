@@ -84,7 +84,7 @@ class BasePlugin:
         Domoticz.Debug('flame OFF image='+str(Images[self.FLAME_OFF_IMG].ID))
             
         if (self.TARGET_TEMP_UNIT not in Devices):
-            Domoticz.Device(Name="Room Setpoint",  Unit=self.TARGET_TEMP_UNIT, Type=242,  Subtype=1, Image=Images[self.FLAME_OFF_IMG].ID).Create()
+            Domoticz.Device(Name="Room Setpoint",  Unit=self.TARGET_TEMP_UNIT, Type=242, Subtype=1, Image=Images[self.FLAME_OFF_IMG].ID).Create()
             UpdateDevice(self.TARGET_TEMP_UNIT, 0, "0.0")
             
         if (self.ROOM_TEMP_UNIT not in Devices):
@@ -361,6 +361,9 @@ class BasePlugin:
         if (float(target) < self.TEMPERATURE_MIN) or (float(target) > self.TEMPERATURE_MAX):
             Domoticz.Error('Invalid temperature setting : '+str(target)+'. Should be >='+str(self.TEMPERATURE_MIN)+' and <='+str(self.TEMPERATURE_MAX))
             return
+        
+        if (self.atagConn.Connecting() or self.atagConn.Connected()):
+            Domoticz.Debug("onConnect called, Connection is alive.")
         
         Domoticz.Log('onConnect Updating target temperature to '+str(target))
         payload = { "update_message": { "seqnr": 0, 
