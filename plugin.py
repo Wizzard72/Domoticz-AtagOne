@@ -152,6 +152,9 @@ class BasePlugin:
         Status = int(Data["Status"])
         Domoticz.Log("Data = "+str(Data))
         Domoticz.Log("Connection = "+str(Connection))
+        if (self.httpConn.Connecting() or self.httpConn.Connected()):
+            Domoticz.Debug("onHeartbeat called, Connection is alive.")
+            
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
             Domoticz.Debug('Atag One response: '+strData)
