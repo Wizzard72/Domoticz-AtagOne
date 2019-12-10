@@ -127,6 +127,9 @@ class BasePlugin:
 
     def onConnect(self, Connection, Status, Description):
         Domoticz.Debug("onConnect called")
+        Domoticz.Log("Value changed")
+        Domoticz.Log("Status = "+str(Status))
+        Domoticz.Log("Description = "+str(Description))
         if (Status == 0):
             Domoticz.Log("Atag One connected successfully.")
             if self.hostAuth:
