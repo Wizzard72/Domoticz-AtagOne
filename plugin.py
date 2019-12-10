@@ -131,7 +131,7 @@ class BasePlugin:
             Domoticz.Log("Atag One connected successfully.")
             if self.hostAuth:
                 if self.setLevel:
-                    Domoticz.Log("Setting AtagOne target temperature.")
+                    Domoticz.Log("Setting Atag One target temperature.")
                     self.UpdateTargetTemp(self.newLevel)
                 else:
                     Domoticz.Log("Requesting AtagOne details.")
@@ -207,7 +207,8 @@ class BasePlugin:
         Domoticz.Debug("SetupConnection called")
         self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
         self.atagConn.Connect()
-        self.Authenticate()
+        # self.Authenticate()
+        newCountDown = 1
 
     def RequestDetails(self):
         Domoticz.Debug("RequestDetails called")
