@@ -144,8 +144,10 @@ class BasePlugin:
             self.countDown = 6
 
     def onMessage(self, Connection, Data):
+        Domoticz.Log("onMessage called")
         Domoticz.Debug("onMessage called")
         Status = int(Data["Status"])
+        Domoticz.Log("Status = "+Status)
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
             Domoticz.Debug('Atag One response: '+strData)
@@ -165,7 +167,6 @@ class BasePlugin:
         else:
             Domoticz.Error('Atag One returned status='+Data['Status'])
         self.countDown = 6
-        Domoticz.Log("onMessage called")
 
     def onCommand(self, Unit, Command, Level, Hue):
         Domoticz.Log("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
