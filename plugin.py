@@ -270,7 +270,7 @@ class BasePlugin:
             else:
                 if (('acc_status' in response) and (int(response['acc_status']) == 0)):
                     newCountDown = 12 # wait longer before retrying
-                Domoticz.Log('Atag One missing retrieve response (report and/or control')
+                Domoticz.Log('Atag One missing retrieve response (report and/or control)')
                 
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response):
             report = response['report']
@@ -384,9 +384,9 @@ class BasePlugin:
         payload = { "update_message": { "seqnr": 0, 
                                         "account_auth":  { "user_account": "",
                                                            "mac_address": self.hostMac },
-                                        "control": { "ch_mode_temp": 14 } } }
+                                        "control": { "ch_mode_temp": target } } }
         sendData = { 'Verb' : 'POST',
-                     'URL'  : '/update',
+                     'URL'  : '/update-message',
                      'Headers' : { 'User-Agent': "Mozilla/5.0 (compatible; AtagOneLocalAPI/1.0.0; http://atag.one/)",
                                    'X-OneApp-Version': '1.0.0', \
                                    'Content-Type': 'application/json; UTF-8', \
