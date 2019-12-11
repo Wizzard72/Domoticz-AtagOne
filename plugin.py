@@ -385,7 +385,7 @@ class BasePlugin:
                                                            "mac_address": self.hostMac },
                                         "control": { "ch_mode_temp": target } } }
         sendData = { 'Verb' : 'POST',
-                     'URL'  : '/update_message',
+                     'URL'  : '/update',
                      'Headers' : { 'User-Agent': "Mozilla/5.0 (compatible; AtagOneLocalAPI/1.0.0; http://atag.one/)",
                                    'Content-Type': 'application/json; UTF-8', \
                                    'Accept-Charset': 'UTF-8', \
