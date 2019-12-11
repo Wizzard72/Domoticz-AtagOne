@@ -148,6 +148,7 @@ class BasePlugin:
             self.countDown = 6
 
     def onMessage(self, Connection, Data):
+        Domoticz.Trace(True)
         Domoticz.Log("onMessage called")
         Domoticz.Debug("onMessage called")
         Status = int(Data["Status"])
