@@ -379,6 +379,7 @@ class BasePlugin:
         if (self.atagConn.Connecting() or self.atagConn.Connected()):
             Domoticz.Debug("onConnect called, Connection is alive.")
         
+        self.atagConn.Connect()
         Domoticz.Log('onConnect Updating target temperature to '+str(target))
         payload = { "update_message": { "seqnr": 0, 
                                         "account_auth":  { "user_account": "",
