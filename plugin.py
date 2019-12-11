@@ -262,6 +262,17 @@ class BasePlugin:
                 UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
             else:
                 Domoticz.Log('Atag One invalid retrieve response (room_temp/ch_mode_temp/boiler_status)')
+        else:
+            Domoticz.Log("Else")
+            if (('acc_status' in response) and (int(response['acc_status']) == 3)):
+                self.hostAuth = False
+                newCountDown = 1
+            else:
+                if (('acc_status' in response) and (int(response['acc_status']) == 0)):
+                    newCountDown = 12 # wait longer before retrying
+                Domoticz.Log('Atag One missing retrieve response (report and/or control')
+                
+        if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response):
             if ('outside_temp' in report):
                 outsideTemp = report['outside_temp']
                 Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsideTemp))
@@ -312,7 +323,7 @@ class BasePlugin:
             else:
                 if (('acc_status' in response) and (int(response['acc_status']) == 0)):
                     newCountDown = 12 # wait longer before retrying
-                Domoticz.Log('Atag One missing retrieve response')
+                Domoticz.Log('Atag One missing retrieve response (report)')
         return newCountDown
         
     def Authenticate(self):
