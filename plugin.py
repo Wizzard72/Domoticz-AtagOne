@@ -241,6 +241,7 @@ class BasePlugin:
         
     def ProcessDetails(self, response):
         Domoticz.Debug("ProcessDetails called")
+        Domoticz.Log("ProcessDetails response = "+str(response))
         newCountDown = 6
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response) and ('control' in response):
             report = response['report']
@@ -304,6 +305,7 @@ class BasePlugin:
             else:
                 Domoticz.Log('Atag One invalid retrieve response (ch_return_temp)')
         else:
+            Domoticz.Log("Else")
             if (('acc_status' in response) and (int(response['acc_status']) == 3)):
                 self.hostAuth = False
                 newCountDown = 1
