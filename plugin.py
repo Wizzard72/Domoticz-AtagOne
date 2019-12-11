@@ -273,6 +273,7 @@ class BasePlugin:
                 Domoticz.Log('Atag One missing retrieve response (report and/or control')
                 
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response):
+            report = response['report']
             if ('outside_temp' in report):
                 outsideTemp = report['outside_temp']
                 Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsideTemp))
