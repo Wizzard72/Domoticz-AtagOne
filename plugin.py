@@ -79,7 +79,7 @@ class BasePlugin:
 
         for image in Images:
             Domoticz.Debug("Icon " + str(Images[image].ID) + " " + Images[image].Name)
-            
+        
         Domoticz.Debug('flame ON image='+str(Images[self.FLAME_ON_IMG].ID))
         Domoticz.Debug('flame OFF image='+str(Images[self.FLAME_OFF_IMG].ID))
             
