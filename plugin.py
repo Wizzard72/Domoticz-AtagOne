@@ -338,9 +338,8 @@ class BasePlugin:
                                                                 "account_type": 0}]} } }
         sendData = { 'Verb' : 'POST',
                      'URL'  : '/pair_message',
-                     'Headers' : { 'User-Agent': "Mozilla/5.0 (compatible; AtagOneLocalAPI/1.0.0; http://atag.one/)",
-                                   'X-OneApp-Version': '1.0.0', \
-                                   'Content-Type': 'application/json; UTF-8', \
+                     'Headers' : { 'User-Agent': "Mozilla/5.0",
+                                   'Content-Type': 'application/json', \
                                    'Connection': 'keep-alive', \
                                    'Accept': '*/*', \
                                    'Accept-Charset': 'UTF-8', \
