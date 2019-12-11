@@ -387,6 +387,7 @@ class BasePlugin:
         
     def ProcessUpdate(self, response):
         Domoticz.Debug("ProcessUpdate called")
+        Domoticz.Log("ProcessUpdate response = "+str(response))
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('status' in response):
             Domoticz.Log('Atag One target temperature updated')
             if (self.atagConn == None) or (not self.atagConn.Connected()):
