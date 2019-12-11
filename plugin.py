@@ -381,14 +381,12 @@ class BasePlugin:
         Domoticz.Log('onConnect Updating target temperature to '+str(target))
         payload = { "update_message": { "seqnr": 0, 
                                         "account_auth":  { "user_account": "",
-                                                           "mac_address": "B8:27:EB:B6:91:53" },
+                                                           "mac_address": self.hostMac },
                                         "control": { "ch_mode_temp": target } } }
         sendData = { 'Verb' : 'POST',
                      'URL'  : '/update_message',
                      'Headers' : { 'User-Agent': "Mozilla/5.0 (compatible; AtagOneLocalAPI/1.0.0; http://atag.one/)",
                                    'Content-Type': 'application/json; UTF-8', \
-                                   'Connection': 'keep-alive', \
-                                   'Accept': '*/*', \
                                    'Accept-Charset': 'UTF-8', \
                                    'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT) },
                      'Data' : json.dumps(payload)
