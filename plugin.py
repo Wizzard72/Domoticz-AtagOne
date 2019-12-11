@@ -381,7 +381,7 @@ class BasePlugin:
         Domoticz.Log('onConnect Updating target temperature to '+str(target))
         payload = { "update_message": { "seqnr": 0, 
                                         "account_auth":  { "user_account": "",
-                                                           "mac_address": "b8:27:eb:b6:91:53" },
+                                                           "mac_address": "B8:27:EB:B6:91:53" },
                                         "control": { "ch_mode_temp": target } } }
         sendData = { 'Verb' : 'POST',
                      'URL'  : '/update_message',
