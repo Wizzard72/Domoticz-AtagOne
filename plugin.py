@@ -379,6 +379,7 @@ class BasePlugin:
             Domoticz.Debug("onConnect called, Connection is alive.")
         
         Domoticz.Log('onConnect Updating target temperature to '+str(target))
+        payload2 =  curl -X POST -i Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT)+'/update' --data '{ "update_message": { "seqnr": 0,"account_auth":  { "user_account": "","mac_address": self.hostMac },"control": { "ch_mode_temp": target } } }'
         payload = { "update_message": { "seqnr": 0, 
                                         "account_auth":  { "user_account": "",
                                                            "mac_address": self.hostMac },
