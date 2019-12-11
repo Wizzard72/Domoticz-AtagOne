@@ -384,7 +384,7 @@ class BasePlugin:
         payload = { "update_message": { "seqnr": 0, 
                                         "account_auth":  { "user_account": "",
                                                            "mac_address": self.hostMac },
-                                        "device": null,
+                                        "device": '''null''',
                                         "status": null,
                                         "report": null,
                                         "configuration": null,
