@@ -151,14 +151,14 @@ class BasePlugin:
         Domoticz.Log("onMessage called")
         Domoticz.Debug("onMessage called")
         Status = int(Data["Status"])
-        Domoticz.Log("Data = "+str(Data))
-        Domoticz.Log("Connection = "+str(Connection))
+        Domoticz.Log("onMessage Data = "+str(Data))
+        Domoticz.Log("onMessage Connection = "+str(Connection))
         if (self.atagConn.Connecting() or self.atagConn.Connected()):
-            Domoticz.Debug("onHeartbeat called, Connection is alive.")
+            Domoticz.Debug("onMessage called, Connection is alive.")
             
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
-            Domoticz.Debug('Atag One response: '+strData)
+            Domoticz.Debug('onMessage Atag One response: '+strData)
             atagResponse = json.loads(strData)
             if ('retrieve_reply' in atagResponse):
                 self.countDown = self.ProcessDetails(atagResponse['retrieve_reply'])
@@ -171,9 +171,9 @@ class BasePlugin:
             if ('update_reply' in atagResponse):
                 self.ProcessUpdate(atagResponse['update_reply'])
             else:
-                Domoticz.Log('Unknown response from Atag One')
+                Domoticz.Log('onMessage Unknown response from Atag One')
         else:
-            Domoticz.Error('Atag One returned status='+Data['Status'])
+            Domoticz.Error('onMessage Atag One returned status='+Data['Status'])
         self.countDown = 6
 
     def onCommand(self, Unit, Command, Level, Hue):
