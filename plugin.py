@@ -62,6 +62,7 @@ class BasePlugin:
         return
 
     def onStart(self):
+        Domoticz.Trace(True)
         Domoticz.Debug("onStart called")
         if Parameters["Mode2"] == 'Debug':
             Domoticz.Debugging(1)
@@ -126,6 +127,7 @@ class BasePlugin:
         Domoticz.Log("onStop called")
 
     def onConnect(self, Connection, Status, Description):
+        Domoticz.Trace(True)
         Domoticz.Debug("onConnect called")
         Domoticz.Log("onConnect Value changed")
         Domoticz.Log("onConnect Status = "+str(Status))
@@ -179,6 +181,7 @@ class BasePlugin:
         self.countDown = 6
 
     def onCommand(self, Unit, Command, Level, Hue):
+        Domoticz.Trace(True)
         Domoticz.Log("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
         if (int(Unit) == self.TARGET_TEMP_UNIT) and (int(Unit) in Devices) and (str(Command) == 'Set Level'):
             if (self.atagConn == None) or (not self.atagConn.Connected()):
@@ -191,13 +194,16 @@ class BasePlugin:
                 self.UpdateTargetTemp(Level)
 
     def onNotification(self, Name, Subject, Text, Status, Priority, Sound, ImageFile):
+        Domoticz.Trace(True)
         Domoticz.Debug("onNotification called")
         Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
 
     def onDisconnect(self, Connection):
+        Domoticz.Trace(True)
         Domoticz.Log("onDisconnect called")
 
     def onHeartbeat(self):
+        Domoticz.Trace(True)
         Domoticz.Debug("onHeartbeat called")
         if (self.atagConn != None) and (self.atagConn.Connecting()):
             return
@@ -215,6 +221,7 @@ class BasePlugin:
                     self.Authenticate()
 
     def SetupConnection(self):
+        Domoticz.Trace(True)
         Domoticz.Debug("SetupConnection called")
         self.atagConn = Domoticz.Connection(Name='AtagOneLocalConn', Transport="TCP/IP", Protocol="HTTP", Address=Parameters["Address"], Port=self.HTTP_CLIENT_PORT)
         self.atagConn.Connect()
@@ -222,6 +229,7 @@ class BasePlugin:
         newCountDown = 1
 
     def RequestDetails(self):
+        Domoticz.Trace(True)
         Domoticz.Debug("RequestDetails called")
         payload = { "retrieve_message": { "seqnr": 1, 
                                           "account_auth" : { "user_account": "",
@@ -241,6 +249,7 @@ class BasePlugin:
         self.atagConn.Send(sendData)
         
     def ProcessDetails(self, response):
+        Domoticz.Trace(True)
         Domoticz.Debug("ProcessDetails called")
         newCountDown = 6
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response) and ('control' in response):
@@ -315,6 +324,7 @@ class BasePlugin:
         return newCountDown
         
     def Authenticate(self):
+        Domoticz.Trace(True)
         Domoticz.Debug("Authenticate called")
         payload = { "pair_message": { "seqnr": 1, 
                                       "account_auth": { "user_account": "",
@@ -337,6 +347,7 @@ class BasePlugin:
         self.atagConn.Send(sendData)
         
     def ProcessAuthorization(self, response):
+        Domoticz.Trace(True)
         Domoticz.Debug("ProcessAuthorization called")
         newCountDown = 6
         if ('acc_status' in response):
@@ -357,6 +368,7 @@ class BasePlugin:
         return newCountDown
       
     def UpdateTargetTemp(self, target):
+        Domoticz.Trace(True)
         Domoticz.Debug("onConnect UpdateTargetTemp called")
         Domoticz.Log("onConnect target = "+str(target))
         self.setLevel = False        
@@ -387,6 +399,7 @@ class BasePlugin:
         self.atagConn.Send(sendData)
         
     def ProcessUpdate(self, response):
+        Domoticz.Trace(True)
         Domoticz.Debug("ProcessUpdate called")
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('status' in response):
             Domoticz.Log('Atag One target temperature updated')
