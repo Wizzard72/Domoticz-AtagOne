@@ -384,12 +384,7 @@ class BasePlugin:
         payload = { "update_message": { "seqnr": 0, 
                                         "account_auth":  { "user_account": "",
                                                            "mac_address": self.hostMac },
-                                        "device": '''null''',
-                                        "status": '''null''',
-                                        "report": '''null''',
-                                        "configuration": '''null''',
-                                        "schedules": '''null''',
-                                        "control": { "ch_mode_temp": target } } }
+                                        "control": { "ch_mode_temp": 14 } } }
         sendData = { 'Verb' : 'POST',
                      'URL'  : '/update',
                      'Headers' : { 'User-Agent': "Mozilla/5.0 (compatible; AtagOneLocalAPI/1.0.0; http://atag.one/)",
