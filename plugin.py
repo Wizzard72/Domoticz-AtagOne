@@ -152,7 +152,6 @@ class BasePlugin:
         Domoticz.Debug("onMessage called")
         Status = int(Data["Status"])
         Domoticz.Log("onMessage Data = "+str(Data))
-        Domoticz.Log("onMessage Connection = "+str(Connection))
         if (self.atagConn.Connecting() or self.atagConn.Connected()):
             Domoticz.Debug("onMessage called, Connection is alive.")
             
