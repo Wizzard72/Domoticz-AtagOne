@@ -169,6 +169,7 @@ class BasePlugin:
                 return
             
             if ('update_reply' in atagResponse):
+                Domoticz.Log("onMessage update_reply = "+str(atagResponse['update_reply']))
                 self.ProcessUpdate(atagResponse['update_reply'])
             else:
                 Domoticz.Log('onMessage Unknown response from Atag One')
