@@ -127,37 +127,35 @@ class BasePlugin:
 
     def onConnect(self, Connection, Status, Description):
         Domoticz.Debug("onConnect called")
-        Domoticz.Log("onConnect Value changed")
-        Domoticz.Log("onConnect Status = "+str(Status))
-        Domoticz.Log("onConnect Description = "+str(Description))
+        Domoticz.Log("Value changed")
+        Domoticz.Debug("Status = "+str(Status))
+        Domoticz.Debug("Description = "+str(Description))
         if (Status == 0):
-            Domoticz.Log("onConnect Atag One connected successfully.")
+            Domoticz.Log("Atag One connected successfully.")
             if self.hostAuth:
                 if self.setLevel:
-                    Domoticz.Log("onConnect Setting Atag One target temperature.")
-                    Domoticz.Log("onConnect newLevel = "+str(self.newLevel))
+                    Domoticz.Log("Setting Atag One target temperature.")
                     self.UpdateTargetTemp(self.newLevel)
                 else:
-                    Domoticz.Log("onConnect Requesting Atag One details.")
+                    Domoticz.Log("Requesting Atag One details.")
                     self.RequestDetails()
             else:
-                Domoticz.Log("onConnect Requesting Atag One authorization.")
+                Domoticz.Log("Requesting Atag One authorization.")
                 self.Authenticate()
         else:
             Domoticz.Log("Failed to connect ("+str(Status)+") to: "+Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT)+" with error: "+Description)
             self.countDown = 6
 
     def onMessage(self, Connection, Data):
-        Domoticz.Log("onMessage called")
         Domoticz.Debug("onMessage called")
         Status = int(Data["Status"])
-        Domoticz.Log("onMessage Data = "+str(Data))
+        Domoticz.Debug("onMessage Data = "+str(Data))
         if (self.atagConn.Connecting() or self.atagConn.Connected()):
-            Domoticz.Debug("onMessage called, Connection is alive.")
+            Domoticz.Debug("Connection is alive.")
             
         if (Status == 200):            
             strData = Data["Data"].decode("utf-8", "ignore")
-            Domoticz.Debug('onMessage Atag One response: '+strData)
+            Domoticz.Debug('Atag One response: '+strData)
             atagResponse = json.loads(strData)
             if ('retrieve_reply' in atagResponse):
                 self.countDown = self.ProcessDetails(atagResponse['retrieve_reply'])
@@ -168,12 +166,12 @@ class BasePlugin:
                 return
             
             if ('update_reply' in atagResponse):
-                Domoticz.Log("onMessage update_reply = "+str(atagResponse['update_reply']))
+                Domoticz.Debug("Update_reply = "+str(atagResponse['update_reply']))
                 self.ProcessUpdate(atagResponse['update_reply'])
             else:
-                Domoticz.Log('onMessage Unknown response from Atag One')
+                Domoticz.Log('Unknown response from Atag One')
         else:
-            Domoticz.Error('onMessage Atag One returned status='+Data['Status'])
+            Domoticz.Error('Atag One returned status='+Data['Status'])
         self.countDown = 6
 
     def onCommand(self, Unit, Command, Level, Hue):
@@ -193,7 +191,7 @@ class BasePlugin:
         Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
 
     def onDisconnect(self, Connection):
-        Domoticz.Log("onDisconnect called")
+        Domoticz.Debug("onDisconnect called")
 
     def onHeartbeat(self):
         Domoticz.Debug("onHeartbeat called")
@@ -240,7 +238,7 @@ class BasePlugin:
         
     def ProcessDetails(self, response):
         Domoticz.Debug("ProcessDetails called")
-        Domoticz.Log("ProcessDetails response = "+str(response))
+        Domoticz.Debug("ProcessDetails response = "+str(response))
         newCountDown = 6
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response) and ('control' in response):
             report = response['report']
@@ -375,7 +373,7 @@ class BasePlugin:
       
     def UpdateTargetTemp(self, target):
         Domoticz.Debug("onConnect UpdateTargetTemp called")
-        Domoticz.Log("onConnect target = "+str(target))
+        Domoticz.Debug("target = "+str(target))
         self.setLevel = False        
         if (float(target) < self.TEMPERATURE_MIN) or (float(target) > self.TEMPERATURE_MAX):
             Domoticz.Error('Invalid temperature setting : '+str(target)+'. Should be >='+str(self.TEMPERATURE_MIN)+' and <='+str(self.TEMPERATURE_MAX))
@@ -384,7 +382,7 @@ class BasePlugin:
         if (self.atagConn.Connecting() or self.atagConn.Connected()):
             Domoticz.Debug("onConnect called, Connection is alive.")
         
-        Domoticz.Log('onConnect Updating target temperature to '+str(target))
+        Domoticz.Log('Updating target temperature to '+str(target))
         payload = { "update_message": { "seqnr": 0, 
                                         "account_auth":  { "user_account": "",
                                                            "mac_address": self.hostMac },
@@ -397,12 +395,12 @@ class BasePlugin:
                                    'Host': Parameters["Address"]+":"+str(self.HTTP_CLIENT_PORT) },
                      'Data' : json.dumps(payload)
                    }
-        Domoticz.Log("onConnect sendData = "+str(sendData))
+        Domoticz.Debug("sendData = "+str(sendData))
         self.atagConn.Send(sendData)
         
     def ProcessUpdate(self, response):
         Domoticz.Debug("ProcessUpdate called")
-        Domoticz.Log("ProcessUpdate response = "+str(response))
+        Domoticz.Debug("ProcessUpdate response = "+str(response))
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('status' in response):
             Domoticz.Log('Atag One target temperature updated')
             if (self.atagConn == None) or (not self.atagConn.Connected()):
