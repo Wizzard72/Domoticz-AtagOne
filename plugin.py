@@ -273,6 +273,12 @@ class BasePlugin:
                 
         if (('acc_status' in response) and int(response['acc_status']) == 2) and ('report' in response):
             report = response['report']
+            if ('room_temp' in report):
+                roomTemp = report['room_temp']
+                Domoticz.Log('Atag One status retrieved: roomTemp='+str(roomTemp))
+                UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
+            else:
+                Domoticz.Log('Atag One invalid retrieve response (room_temp)')
             if ('outside_temp' in report):
                 outsideTemp = report['outside_temp']
                 Domoticz.Log('Atag One status retrieved: outside_temp='+str(outsideTemp))
