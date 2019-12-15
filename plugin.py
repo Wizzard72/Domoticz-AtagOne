@@ -219,7 +219,7 @@ class BasePlugin:
 
     def RequestDetails(self):
         Domoticz.Debug("RequestDetails called")
-        payload = { "retrieve_message": { "seqnr": 0, 
+        payload = { "retrieve_message": { "seqnr": 1, 
                                           "account_auth" : { "user_account": "",
                                                              "mac_address": self.hostMac },
                                           "info": self.MESSAGE_INFO_CONTROL+self.MESSAGE_INFO_REPORT } }
@@ -383,7 +383,7 @@ class BasePlugin:
             Domoticz.Debug("onConnect called, Connection is alive.")
         
         Domoticz.Log('Updating target temperature to '+str(target))
-        payload = { "update_message": { "seqnr": 0, 
+        payload = { "update_message": { "seqnr": 1, 
                                         "account_auth":  { "user_account": "",
                                                            "mac_address": self.hostMac },
                                         "control": { "ch_mode_temp": target } } }
