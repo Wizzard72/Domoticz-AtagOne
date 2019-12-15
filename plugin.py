@@ -255,7 +255,7 @@ class BasePlugin:
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp))
                 else:
                     Domoticz.Debug('Updating with flame OFF')
-                    UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_OFF_IMG].ID)
+                    UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp))
                 UpdateDevice(self.ROOM_TEMP_UNIT, int(roomTemp), str(roomTemp))
             else:
                 Domoticz.Log('Atag One invalid retrieve response (room_temp/ch_mode_temp/boiler_status)')
