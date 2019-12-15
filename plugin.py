@@ -320,11 +320,12 @@ class BasePlugin:
                 Domoticz.Log('Atag One invalid retrieve response (ch_return_temp)')
         else:
             if (('acc_status' in response) and (int(response['acc_status']) == 3)):
-                Domoticz.Log("Atag One acc_status "+int(response['acc_status']))
+                Domoticz.Error("Atag One acc_status "+int(response['acc_status']))
                 self.hostAuth = False
                 newCountDown = 1
             else:
                 if (('acc_status' in response) and (int(response['acc_status']) == 0)):
+                    Domoticz.Error("Atag One acc_status "+int(response['acc_status']))
                     newCountDown = 12 # wait longer before retrying
                 Domoticz.Log('Atag One missing retrieve response (report)')
         return newCountDown
