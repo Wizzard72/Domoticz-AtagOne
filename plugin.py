@@ -120,7 +120,7 @@ class BasePlugin:
             UpdateDevice(self.CH_RETURN_TEMP_UNIT, 0, "0.0")
         
         self.SetupConnection()
-        Domoticz.Heartbeat(10)
+        Domoticz.Heartbeat(30)
 
     def onStop(self):
         Domoticz.Log("onStop called")
