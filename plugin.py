@@ -332,7 +332,7 @@ class BasePlugin:
         
     def Authenticate(self):
         Domoticz.Debug("Authenticate called")
-        payload = { "pair_message": { "seqnr": 0, 
+        payload = { "pair_message": { "seqnr": 1, 
                                       "account_auth": { "user_account": "",
                                                         "mac_address": self.hostMac },
                                       "accounts": {"entries": [{"user_account": "",
