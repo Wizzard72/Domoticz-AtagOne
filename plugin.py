@@ -252,7 +252,7 @@ class BasePlugin:
                 Domoticz.Debug('Atag One status retrieved: boilerStatus='+str(boilerStatus))
                 if ((boilerStatus & 8) == 8):
                     Domoticz.Debug('Updating with flame ON')
-                    UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_ON_IMG].ID)
+                    UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp))
                 else:
                     Domoticz.Debug('Updating with flame OFF')
                     UpdateDevice(self.TARGET_TEMP_UNIT, int(targetTemp), str(targetTemp), Images[self.FLAME_OFF_IMG].ID)
