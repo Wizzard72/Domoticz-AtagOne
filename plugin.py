@@ -319,8 +319,8 @@ class BasePlugin:
             else:
                 Domoticz.Log('Atag One invalid retrieve response (ch_return_temp)')
         else:
-            Domoticz.Log("Else")
             if (('acc_status' in response) and (int(response['acc_status']) == 3)):
+                Domoticz.Log("Atag One acc_status "+int(response['acc_status']))
                 self.hostAuth = False
                 newCountDown = 1
             else:
