@@ -1,3 +1,5 @@
+# !!!! Final version - I'm not maintaining this plugin anymore. Recently migrated to Home Assistant.
+
 # Domoticz-AtagOne-Local
 Domoticz python plugin for local access to Atag One thermostat
 
